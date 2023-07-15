@@ -1,0 +1,52 @@
+# Carpetas generadas por Visual Studio
+bin/
+obj/
+.vs/
+
+# Archivos de proyecto generados por Visual Studio
+*.csproj.user
+*.sln.docstates
+
+# Archivos de copia de seguridad generados por Visual Studio
+*.bak
+*.vssscc
+
+# Archivos de caché y archivos generados por el compilador de C#
+# Agrega aquí las extensiones de archivos específicas que deseas excluir
+*.cache
+*.dll
+*.exe
+*.log
+*.pdb
+*.tlog
+*.user
+*.vspscc
+*.xsn
+*.xss
+
+# Carpeta de resultados de publicación
+publish/
+
+# Carpeta de paquetes de NuGet
+## Agrega aquí los nombres de las carpetas específicas de los paquetes de NuGet que deseas excluir
+packages/
+
+# Archivos generados por Visual Studio Code
+.vscode/
+
+# Carpeta de almacenamiento de herramientas de compilación generadas por Visual Studio
+Tools/
+
+# Carpeta de almacenamiento de extensiones de Visual Studio Code
+.vscode/
+
+# Carpeta de almacenamiento de dependencias de npm
+node_modules/
+
+# Archivos de registro
+*.log
+
+# Archivos de análisis de código generados por herramientas externas
+*.eslint
+*.eslintcache
+*.stylelint
