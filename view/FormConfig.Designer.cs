@@ -36,20 +36,16 @@
       lblSuffix = new Label();
       textSuffix = new TextBox();
       groupServer = new GroupBox();
+      textNamespace = new TextBox();
+      lblNamespace = new Label();
       textDomain = new TextBox();
       lblDomain = new Label();
-      groupPUKA = new GroupBox();
-      btnOpenFile = new Button();
-      textLogs = new TextBox();
-      lblLogsDirectory = new Label();
       btnCancel = new Button();
       lblTitle = new Label();
       btnAccept = new Button();
-      folderBrowserDialog = new FolderBrowserDialog();
       primaryContainer.SuspendLayout();
       groupCompany.SuspendLayout();
       groupServer.SuspendLayout();
-      groupPUKA.SuspendLayout();
       SuspendLayout();
       // 
       // primaryContainer
@@ -57,7 +53,6 @@
       resources.ApplyResources(primaryContainer, "primaryContainer");
       primaryContainer.Controls.Add(groupCompany);
       primaryContainer.Controls.Add(groupServer);
-      primaryContainer.Controls.Add(groupPUKA);
       primaryContainer.Name = "primaryContainer";
       // 
       // groupCompany
@@ -93,11 +88,23 @@
       // 
       // groupServer
       // 
+      groupServer.Controls.Add(textNamespace);
+      groupServer.Controls.Add(lblNamespace);
       groupServer.Controls.Add(textDomain);
       groupServer.Controls.Add(lblDomain);
       resources.ApplyResources(groupServer, "groupServer");
       groupServer.Name = "groupServer";
       groupServer.TabStop = false;
+      // 
+      // textNamespace
+      // 
+      resources.ApplyResources(textNamespace, "textNamespace");
+      textNamespace.Name = "textNamespace";
+      // 
+      // lblNamespace
+      // 
+      resources.ApplyResources(lblNamespace, "lblNamespace");
+      lblNamespace.Name = "lblNamespace";
       // 
       // textDomain
       // 
@@ -108,34 +115,6 @@
       // 
       resources.ApplyResources(lblDomain, "lblDomain");
       lblDomain.Name = "lblDomain";
-      // 
-      // groupPUKA
-      // 
-      resources.ApplyResources(groupPUKA, "groupPUKA");
-      groupPUKA.Controls.Add(btnOpenFile);
-      groupPUKA.Controls.Add(textLogs);
-      groupPUKA.Controls.Add(lblLogsDirectory);
-      groupPUKA.Name = "groupPUKA";
-      groupPUKA.TabStop = false;
-      // 
-      // btnOpenFile
-      // 
-      btnOpenFile.BackColor = SystemColors.ActiveCaption;
-      resources.ApplyResources(btnOpenFile, "btnOpenFile");
-      btnOpenFile.Name = "btnOpenFile";
-      btnOpenFile.UseVisualStyleBackColor = false;
-      btnOpenFile.Click += OnClickOpenFolder;
-      // 
-      // textLogs
-      // 
-      textLogs.BackColor = SystemColors.ControlLightLight;
-      resources.ApplyResources(textLogs, "textLogs");
-      textLogs.Name = "textLogs";
-      // 
-      // lblLogsDirectory
-      // 
-      resources.ApplyResources(lblLogsDirectory, "lblLogsDirectory");
-      lblLogsDirectory.Name = "lblLogsDirectory";
       // 
       // btnCancel
       // 
@@ -171,13 +150,10 @@
       FormBorderStyle = FormBorderStyle.FixedSingle;
       Name = "FormConfig";
       primaryContainer.ResumeLayout(false);
-      primaryContainer.PerformLayout();
       groupCompany.ResumeLayout(false);
       groupCompany.PerformLayout();
       groupServer.ResumeLayout(false);
       groupServer.PerformLayout();
-      groupPUKA.ResumeLayout(false);
-      groupPUKA.PerformLayout();
       ResumeLayout(false);
       PerformLayout();
     }
@@ -194,12 +170,9 @@
     private Label lblDomain;
     private TextBox textDomain;
     private Label lblTitle;
-    private GroupBox groupPUKA;
-    private Label lblLogsDirectory;
-    private TextBox textLogs;
-    private Button btnOpenFile;
     private Button btnAccept;
     private Button btnCancel;
-    private FolderBrowserDialog folderBrowserDialog;
+    private TextBox textNamespace;
+    private Label lblNamespace;
   }
 }

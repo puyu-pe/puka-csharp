@@ -1,6 +1,6 @@
 namespace puka;
 
-public class TrayIconPrinter : ApplicationContext
+public class TrayIconPrinter 
 {
 	private readonly NotifyIcon trayIcon;
 
@@ -14,11 +14,15 @@ public class TrayIconPrinter : ApplicationContext
 			Visible = true,
 		};
 
+
 		trayIcon.ContextMenuStrip.Items.AddRange(new ToolStripItem[]
 		{
 				new ToolStripMenuItem("salir", null,Close, "OPEN"),
-				// new ToolStripMenuItem("EXIT", null, new EventHandler(Exit), "EXIT")
 		});
+	}
+
+	public void Show(){
+		trayIcon.Visible = true;
 	}
 
 	private void Close(object? sender, EventArgs e)
@@ -26,11 +30,6 @@ public class TrayIconPrinter : ApplicationContext
 		trayIcon.Visible = false;
 		trayIcon.Dispose();
 		Application.Exit();
-	}
-
-	private void Settings(object? sender, EventArgs e)
-	{
-
 	}
 
 }

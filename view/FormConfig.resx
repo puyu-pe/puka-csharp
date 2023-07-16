@@ -262,14 +262,62 @@
   <data name="&gt;&gt;groupCompany.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="textNamespace.Location" type="System.Drawing.Point, System.Drawing">
+    <value>115, 82</value>
+  </data>
+  <data name="textNamespace.Size" type="System.Drawing.Size, System.Drawing">
+    <value>353, 31</value>
+  </data>
+  <data name="textNamespace.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;textNamespace.Name" xml:space="preserve">
+    <value>textNamespace</value>
+  </data>
+  <data name="&gt;&gt;textNamespace.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;textNamespace.Parent" xml:space="preserve">
+    <value>groupServer</value>
+  </data>
+  <data name="&gt;&gt;textNamespace.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="lblNamespace.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblNamespace.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 82</value>
+  </data>
+  <data name="lblNamespace.Size" type="System.Drawing.Size, System.Drawing">
+    <value>113, 25</value>
+  </data>
+  <data name="lblNamespace.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="lblNamespace.Text" xml:space="preserve">
+    <value>Namespace: </value>
+  </data>
+  <data name="&gt;&gt;lblNamespace.Name" xml:space="preserve">
+    <value>lblNamespace</value>
+  </data>
+  <data name="&gt;&gt;lblNamespace.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblNamespace.Parent" xml:space="preserve">
+    <value>groupServer</value>
+  </data>
+  <data name="&gt;&gt;lblNamespace.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <data name="textDomain.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 76</value>
+    <value>95, 32</value>
   </data>
   <data name="textDomain.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>4, 4, 4, 4</value>
   </data>
   <data name="textDomain.Size" type="System.Drawing.Size, System.Drawing">
-    <value>460, 31</value>
+    <value>373, 31</value>
   </data>
   <data name="textDomain.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -284,25 +332,25 @@
     <value>groupServer</value>
   </data>
   <data name="&gt;&gt;textDomain.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>2</value>
   </data>
   <data name="lblDomain.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="lblDomain.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 48</value>
+    <value>8, 38</value>
   </data>
   <data name="lblDomain.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>4, 0, 4, 0</value>
   </data>
   <data name="lblDomain.Size" type="System.Drawing.Size, System.Drawing">
-    <value>146, 25</value>
+    <value>90, 25</value>
   </data>
   <data name="lblDomain.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
   <data name="lblDomain.Text" xml:space="preserve">
-    <value>Dominio Bifrost: </value>
+    <value>Dominio: </value>
   </data>
   <data name="lblDomain.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -317,7 +365,7 @@
     <value>groupServer</value>
   </data>
   <data name="&gt;&gt;lblDomain.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>3</value>
   </data>
   <data name="groupServer.Location" type="System.Drawing.Point, System.Drawing">
     <value>508, 4</value>
@@ -349,129 +397,6 @@
   <data name="&gt;&gt;groupServer.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="groupPUKA.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="btnOpenFile.Location" type="System.Drawing.Point, System.Drawing">
-    <value>922, 39</value>
-  </data>
-  <data name="btnOpenFile.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
-  </data>
-  <data name="btnOpenFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 36</value>
-  </data>
-  <data name="btnOpenFile.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="btnOpenFile.Text" xml:space="preserve">
-    <value>...</value>
-  </data>
-  <data name="btnOpenFile.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>TopCenter</value>
-  </data>
-  <data name="&gt;&gt;btnOpenFile.Name" xml:space="preserve">
-    <value>btnOpenFile</value>
-  </data>
-  <data name="&gt;&gt;btnOpenFile.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnOpenFile.Parent" xml:space="preserve">
-    <value>groupPUKA</value>
-  </data>
-  <data name="&gt;&gt;btnOpenFile.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="textLogs.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="textLogs.Location" type="System.Drawing.Point, System.Drawing">
-    <value>176, 39</value>
-  </data>
-  <data name="textLogs.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
-  </data>
-  <data name="textLogs.Size" type="System.Drawing.Size, System.Drawing">
-    <value>738, 31</value>
-  </data>
-  <data name="textLogs.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="textLogs.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Center</value>
-  </data>
-  <data name="&gt;&gt;textLogs.Name" xml:space="preserve">
-    <value>textLogs</value>
-  </data>
-  <data name="&gt;&gt;textLogs.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;textLogs.Parent" xml:space="preserve">
-    <value>groupPUKA</value>
-  </data>
-  <data name="&gt;&gt;textLogs.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="lblLogsDirectory.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblLogsDirectory.Location" type="System.Drawing.Point, System.Drawing">
-    <value>10, 42</value>
-  </data>
-  <data name="lblLogsDirectory.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 0, 4, 0</value>
-  </data>
-  <data name="lblLogsDirectory.Size" type="System.Drawing.Size, System.Drawing">
-    <value>158, 25</value>
-  </data>
-  <data name="lblLogsDirectory.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="lblLogsDirectory.Text" xml:space="preserve">
-    <value>Directorio de logs:</value>
-  </data>
-  <data name="&gt;&gt;lblLogsDirectory.Name" xml:space="preserve">
-    <value>lblLogsDirectory</value>
-  </data>
-  <data name="&gt;&gt;lblLogsDirectory.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblLogsDirectory.Parent" xml:space="preserve">
-    <value>groupPUKA</value>
-  </data>
-  <data name="&gt;&gt;lblLogsDirectory.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="groupPUKA.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 168</value>
-  </data>
-  <data name="groupPUKA.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
-  </data>
-  <data name="groupPUKA.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 4, 4, 4</value>
-  </data>
-  <data name="groupPUKA.Size" type="System.Drawing.Size, System.Drawing">
-    <value>974, 107</value>
-  </data>
-  <data name="groupPUKA.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="groupPUKA.Text" xml:space="preserve">
-    <value>Configuración PUKA</value>
-  </data>
-  <data name="&gt;&gt;groupPUKA.Name" xml:space="preserve">
-    <value>groupPUKA</value>
-  </data>
-  <data name="&gt;&gt;groupPUKA.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;groupPUKA.Parent" xml:space="preserve">
-    <value>primaryContainer</value>
-  </data>
-  <data name="&gt;&gt;groupPUKA.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
   <data name="primaryContainer.Location" type="System.Drawing.Point, System.Drawing">
     <value>1, 102</value>
   </data>
@@ -479,7 +404,7 @@
     <value>4, 4, 4, 4</value>
   </data>
   <data name="primaryContainer.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1002, 300</value>
+    <value>1002, 184</value>
   </data>
   <data name="primaryContainer.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -497,7 +422,7 @@
     <value>1</value>
   </data>
   <data name="btnCancel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>747, 411</value>
+    <value>747, 293</value>
   </data>
   <data name="btnCancel.Size" type="System.Drawing.Size, System.Drawing">
     <value>119, 45</value>
@@ -557,7 +482,7 @@
     <value>2</value>
   </data>
   <data name="btnAccept.Location" type="System.Drawing.Point, System.Drawing">
-    <value>873, 410</value>
+    <value>873, 294</value>
   </data>
   <data name="btnAccept.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>4, 4, 4, 4</value>
@@ -583,9 +508,6 @@
   <data name="&gt;&gt;btnAccept.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
-  <metadata name="folderBrowserDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 0</value>
-  </metadata>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -596,7 +518,7 @@
     <value>10, 25</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>1000, 470</value>
+    <value>1000, 349</value>
   </data>
   <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 10.8pt</value>
@@ -609,12 +531,6 @@
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>PUKA - VENTANA INICIAL</value>
-  </data>
-  <data name="&gt;&gt;folderBrowserDialog.Name" xml:space="preserve">
-    <value>folderBrowserDialog</value>
-  </data>
-  <data name="&gt;&gt;folderBrowserDialog.Type" xml:space="preserve">
-    <value>System.Windows.Forms.FolderBrowserDialog, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>FormConfig</value>

@@ -6,6 +6,7 @@ using SocketIOClient;
 public class PukaClient
 {
 	private readonly SocketIO client;
+	private int forceConnectIntent = 1; 
 	public PukaClient(string uri)
 	{
 		client = new SocketIO(new Uri(uri), new SocketIOOptions
@@ -49,13 +50,22 @@ public class PukaClient
 
 	private async void OnConnected(object? sender, EventArgs e)
 	{
-		Program.Logger.Info("Conexión exitosa a bifrost.io");
+
+		Program.Logger.Info("Conexión a {0}", client.ServerUri.AbsoluteUri);
 		await client.EmitAsync("printer:start");
 	}
 
-	private void OnError(object? sender, string e)
+	private async void OnError(object? sender, string e)
 	{
-		Program.Logger.Error("SocketIOClient error: {0}", e);
+		Program.Logger.Error("SocketIOClient error: {0} server uri: {1}",e, client.ServerUri.AbsoluteUri);
+		if(forceConnectIntent < 2){
+			await client.ConnectAsync();
+			Program.Logger.Info("Forzando conexión con {0} intento: {1}", client.ServerUri.AbsoluteUri, forceConnectIntent);
+			forceConnectIntent++;
+		}else{
+			Program.Logger.Error("No se pudo conectar a {0}", client.ServerUri.AbsoluteUri);
+			Application.Exit();
+		}
 	}
 
 	private void OnReconnectAttempt(object? sender, int intent)

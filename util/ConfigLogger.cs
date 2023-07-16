@@ -5,17 +5,17 @@ namespace puka;
 static class ConfigLogger
 {
 
-	public static void ToDirectory(string directoryPath)
+	public static void Load()
 	{
+		string directoryPath = Path.GetTempPath();
 		var config = new NLog.Config.LoggingConfiguration();
-
 		// Targets where to log to: File and Console
-		var logInfo = new NLog.Targets.FileTarget("logfile") { FileName = Path.Combine(directoryPath,"info.log") };
-		var logDebug = new NLog.Targets.FileTarget("logfile") { FileName = Path.Combine(directoryPath,"debug.log")  };
-		var logWarn = new NLog.Targets.FileTarget("logfile") { FileName = Path.Combine(directoryPath, "warn.log") };
-		var logError = new NLog.Targets.FileTarget("logfile") { FileName = Path.Combine(directoryPath, "error.log") };
-		var logFatal = new NLog.Targets.FileTarget("logfile") { FileName = Path.Combine(directoryPath, "fatal.log") };
-		var logTrace = new NLog.Targets.FileTarget("logfile") { FileName = Path.Combine(directoryPath, "trace.log") };
+		var logInfo = new NLog.Targets.FileTarget("logfile") { FileName = Path.Combine(directoryPath,"puka_info.log") };
+		var logDebug = new NLog.Targets.FileTarget("logfile") { FileName = Path.Combine(directoryPath,"puka_debug.log")  };
+		var logWarn = new NLog.Targets.FileTarget("logfile") { FileName = Path.Combine(directoryPath, "puka_warn.log") };
+		var logError = new NLog.Targets.FileTarget("logfile") { FileName = Path.Combine(directoryPath, "puka_error.log") };
+		var logFatal = new NLog.Targets.FileTarget("logfile") { FileName = Path.Combine(directoryPath, "puka_fatal.log") };
+		var logTrace = new NLog.Targets.FileTarget("logfile") { FileName = Path.Combine(directoryPath, "puka_trace.log") };
 
 		// Rules for mapping loggers to targets            
 		config.AddRule(LogLevel.Info, LogLevel.Info, logInfo);

@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -12,21 +13,20 @@ namespace puka.view
 {
   public partial class FormConfig : Form
   {
-		private readonly Ookii.Dialogs.WinForms.VistaFolderBrowserDialog browser ;
+
 
     public FormConfig()
     {
-     	browser = new Ookii.Dialogs.WinForms.VistaFolderBrowserDialog();
       InitializeComponent();
     }
 
-    public async void OnClickOpenFolder(object? sender, EventArgs e)
+    public string GetUrlBifrostServer()
     {
-      await Task.Run(() => {
-     		Program.Logger.Debug("que esta pasando");
-				if(browser.ShowDialog() == DialogResult.OK){
-				}
-      });
+      string ruc = textRUC.Text.Trim();
+      string suffixCompany = textSuffix.Text.Trim();
+      string domainBifrost = textDomain.Text.Trim();
+      string namespaceBifrost = textNamespace.Text.Trim();
+      return String.Format("{0}/{1}-{2}-{3}", domainBifrost, namespaceBifrost, ruc, suffixCompany);
     }
 
   }
