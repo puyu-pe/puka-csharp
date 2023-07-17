@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace puka.view
 {
-  public partial class FormConfig : Form
+    public partial class FormConfig : Form
   {
 
 
