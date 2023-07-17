@@ -31,12 +31,12 @@ namespace puka.util
 
             List<PrintDocument> printDocumentList = GeneratePrintDataList(time);
 
-            if (this.printer != null)
+            if (PrinterExists(this.printer.name_system.ToString()))
             {
                 foreach (PrintDocument printDocument in printDocumentList)
                 {
                     InitPrinterName(printDocument);
-                    defineMarginPage(printDocument);
+                    DefineMarginPage(printDocument);
                     PrintLayout(printDocument);
                 }
             }
@@ -64,17 +64,25 @@ namespace puka.util
             printDocument.PrinterSettings.PrinterName = printerName;
         }
 
-        private void defineMarginPage(PrintDocument printDocument)
+        private bool PrinterExists(string printerName)
         {
-            //PaperSize paperSize = new PaperSize("POS80", 226, 1000); // Ancho: 226 píxeles, Largo: 1000 píxeles
-            //printDocument.DefaultPageSettings.PaperSize = paperSize;
+            foreach (string printer in PrinterSettings.InstalledPrinters)
+            {
+                if (printer == printerName)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
+        private void DefineMarginPage(PrintDocument printDocument)
+        {
             float leftMargin = 0.1f;   // Margen izquierdo de 1 pulgada
             float rightMargin = 0.2f;  // Margen derecho de 1 pulgada
             float topMargin = 0.1f;    // Margen superior de 1.5 pulgadas
             float bottomMargin = 1f; // Margen inferior de 1 pulgada
 
-            // Convertir los márgenes de pulgadas a 1/100 de pulgada (unidades utilizadas por el PrintDocument)
             int leftMarginInPixels = (int)(leftMargin * 100);
             int rightMarginInPixels = (int)(rightMargin * 100);
             int topMarginInPixels = (int)(topMargin * 100);
@@ -96,7 +104,7 @@ namespace puka.util
                     {
                         case "invoice":
                             BusinessAdditional(printDocument);
-                            documentLegal(printDocument);
+                            DocumentLegal(printDocument);
                             Customer(printDocument);
                             Additional(printDocument);
                             Items(printDocument);
@@ -107,7 +115,7 @@ namespace puka.util
                             break;
 
                         case "note":
-                            documentLegal(printDocument);
+                            DocumentLegal(printDocument);
                             Customer(printDocument);
                             Additional(printDocument);
                             break;
@@ -115,13 +123,13 @@ namespace puka.util
                         case "command":
                             ProductionArea(printDocument);
                             TextBackgroundInverted(printDocument);
-                            documentLegal(printDocument);
+                            DocumentLegal(printDocument);
                             Additional(printDocument);
                             Items(printDocument);
                             break;
 
                         case "precount":
-                            documentLegal(printDocument);
+                            DocumentLegal(printDocument);
                             Additional(printDocument);
                             Items(printDocument);
                             Amounts(printDocument);
@@ -150,29 +158,6 @@ namespace puka.util
             }
         }
 
-        private RectangleF TextCenterValue(string text, PrintPageEventArgs e, Font font, StringFormat stringFormat)
-        {
-
-            int pageWidth = e.PageBounds.Width;
-            SizeF textSize = e.Graphics.MeasureString(text, font, pageWidth, stringFormat);
-            float x = (pageWidth - textSize.Width) / 2;
-            RectangleF textRect = new RectangleF(x, this.positionY, textSize.Width, textSize.Height);
-
-            return textRect;
-        }
-
-        private RectangleF TextLeftValue(string text, PrintPageEventArgs e, Font font, StringFormat stringFormat)
-        {
-            Graphics graphics = e.Graphics;
-            int marginLeft = e.MarginBounds.Left;
-            int pageWidth = e.PageBounds.Width;
-
-            SizeF textSize = graphics.MeasureString(text, font, pageWidth, stringFormat);
-            RectangleF textRect = new RectangleF(marginLeft, this.positionY, textSize.Width, textSize.Height);
-
-            return textRect;
-        }
-
         private void Header(PrintDocument printDocument)
         {
             StringFormat stringFormat = new StringFormat();
@@ -186,7 +171,7 @@ namespace puka.util
                 {
                     printDocument.PrintPage += (sender, e) =>
                     {
-                        Font font = new Font("Arial", 18, FontStyle.Bold);
+                        Font font = new Font("Arial", 14, FontStyle.Bold);
                         RectangleF textRect = TextCenterValue((this.data.business.comercialDescription.value.ToString()).ToUpper(), e, font, stringFormat);
                         e.Graphics.DrawString((this.data.business.comercialDescription.value.ToString()).ToUpper(), font, DrawingBrushes.Black, textRect, stringFormat);
                         this.positionY += textRect.Height;
@@ -222,7 +207,7 @@ namespace puka.util
                 {
                     printDocument.PrintPage += (sender, e) =>
                     {
-                        Font font = new Font("Arial", 12, FontStyle.Regular);
+                        Font font = new Font("Arial", 10, FontStyle.Regular);
                         RectangleF textRectDescription = TextCenterValue(this.data.business.description.ToString(), e, font, stringFormat);
                         e.Graphics.DrawString(this.data.business.description.ToString(), font, DrawingBrushes.Black, textRectDescription, stringFormat);
                         this.positionY += textRectDescription.Height;
@@ -262,13 +247,13 @@ namespace puka.util
             };
         }
 
-        private void documentLegal(PrintDocument printDocument)
+        private void DocumentLegal(PrintDocument printDocument)
         {
             StringFormat stringFormat = new StringFormat();
 
             stringFormat = TextFormated();
 
-            Font font = new Font("Arial", 12, FontStyle.Bold);
+            Font font = new Font("Arial", 8, FontStyle.Bold);
 
             switch (this.type)
             {
@@ -312,7 +297,7 @@ namespace puka.util
 
         private void Customer(PrintDocument printDocument)
         {
-            Font regularFont = new Font("Arial", 10, FontStyle.Regular);
+            Font regularFont = new Font("Arial", 8, FontStyle.Regular);
             StringFormat stringFormat = new StringFormat();
 
             stringFormat = TextFormated();
@@ -346,7 +331,7 @@ namespace puka.util
 
             printDocument.PrintPage += (sender, e) =>
             {
-                Font font = new Font("Arial", 10, FontStyle.Regular);
+                Font font = new Font("Arial", 8, FontStyle.Regular);
                 float lineHeight = font.GetHeight(e.Graphics);
 
                 if (this.data.additional != null)
@@ -360,14 +345,6 @@ namespace puka.util
                 }
                 this.positionY += lineHeight;
             };
-        }
-
-        private float PositionXLeft(string text, Font font, PrintPageEventArgs e)
-        {
-            SizeF totalTextSize = e.Graphics.MeasureString(text, font);
-            float totalXPos = e.MarginBounds.Right - totalTextSize.Width;
-
-            return totalXPos;
         }
 
         private void Items(PrintDocument printDocument)
@@ -462,7 +439,7 @@ namespace puka.util
 
             printDocument.PrintPage += (sender, e) =>
             {
-                Font regularFont = new Font("Arial", 10, FontStyle.Regular);
+                Font regularFont = new Font("Arial", 8, FontStyle.Regular);
                 float lineHeight = regularFont.GetHeight(e.Graphics);
 
                 var jsonString = JsonConvert.SerializeObject(this.data.amounts);
@@ -494,7 +471,7 @@ namespace puka.util
 
             StringFormat stringFormat = new StringFormat();
             stringFormat = TextFormated();
-            Font regularFont = new Font("Arial", 10, FontStyle.Regular);
+            Font regularFont = new Font("Arial", 8, FontStyle.Regular);
 
             printDocument.PrintPage += (sender, e) =>
             {
@@ -520,7 +497,7 @@ namespace puka.util
 
             StringFormat stringFormat = new StringFormat();
             stringFormat = TextFormated();
-            Font regularFont = new Font("Arial", 10, FontStyle.Regular);
+            Font regularFont = new Font("Arial", 8, FontStyle.Regular);
 
             printDocument.PrintPage += (sender, e) =>
             {
@@ -552,7 +529,7 @@ namespace puka.util
                 Font regularFont = new Font("Arial", 10, FontStyle.Regular);
 
                 float lineHeight = regularFont.GetHeight(e.Graphics);
-                float qrWidth = 100;
+                float qrWidth = 150;
                 float qrXPos = e.MarginBounds.Left + (e.MarginBounds.Width - qrWidth) / 2;
 
 
@@ -568,7 +545,7 @@ namespace puka.util
                     QRCode qrCode = new QRCode(qrCodeData);
 
                     // Tamaño actual dividido por 2
-                    Bitmap qrCodeImage = qrCode.GetGraphic(2);
+                    Bitmap qrCodeImage = qrCode.GetGraphic(3);
 
                     e.Graphics.DrawImage(qrCodeImage, qrXPos, this.positionY);
                     this.positionY += qrCodeImage.Height + lineHeight;
@@ -579,7 +556,7 @@ namespace puka.util
         private void ProductionArea(PrintDocument printDocument)
         {
             string text = $" {this.data.productionArea} ";
-            Font font = new Font("Arial", 12, FontStyle.Regular);
+            Font font = new Font("Arial", 10, FontStyle.Regular);
 
             printDocument.PrintPage += (sender, e) =>
             {
@@ -589,7 +566,7 @@ namespace puka.util
 
                 graphics.DrawString(text, font, DrawingBrushes.Black, x, this.positionY);
 
-                this.positionY += 20;
+                this.positionY += font.GetHeight(e.Graphics);
             };
         }
 
@@ -630,8 +607,8 @@ namespace puka.util
 
         private void TitleExtra(PrintDocument printDocument)
         {
-            Font titleFont = new Font("Arial", 16, FontStyle.Regular); // Ajusta la fuente y el tamaño según tus necesidades
-            Font subtitleFont = new Font("Arial", 12, FontStyle.Regular); // Ajusta la fuente y el tamaño según tus necesidades
+            Font titleFont = new Font("Arial", 14, FontStyle.Regular); // Ajusta la fuente y el tamaño según tus necesidades
+            Font subtitleFont = new Font("Arial", 10, FontStyle.Regular); // Ajusta la fuente y el tamaño según tus necesidades
 
             string title = this.data.titleExtra.title;
             string subtitle = this.data.titleExtra.subtitle;
@@ -665,6 +642,36 @@ namespace puka.util
             stringFormat.FormatFlags = StringFormatFlags.LineLimit;
 
             return stringFormat;
+        }
+
+        private float PositionXLeft(string text, Font font, PrintPageEventArgs e)
+        {
+            SizeF totalTextSize = e.Graphics.MeasureString(text, font);
+            float totalXPos = e.MarginBounds.Right - totalTextSize.Width;
+
+            return totalXPos;
+        }
+
+        private RectangleF TextCenterValue(string text, PrintPageEventArgs e, Font font, StringFormat stringFormat)
+        {
+            int pageWidth = e.PageBounds.Width;
+            SizeF textSize = e.Graphics.MeasureString(text, font, pageWidth, stringFormat);
+            float x = (pageWidth - textSize.Width) / 2;
+            RectangleF textRect = new RectangleF(x, this.positionY, textSize.Width, textSize.Height);
+
+            return textRect;
+        }
+
+        private RectangleF TextLeftValue(string text, PrintPageEventArgs e, Font font, StringFormat stringFormat)
+        {
+            Graphics graphics = e.Graphics;
+            int marginLeft = e.MarginBounds.Left;
+            int pageWidth = e.PageBounds.Width;
+
+            SizeF textSize = graphics.MeasureString(text, font, pageWidth, stringFormat);
+            RectangleF textRect = new RectangleF(marginLeft, this.positionY, textSize.Width, textSize.Height);
+
+            return textRect;
         }
     }
 }
