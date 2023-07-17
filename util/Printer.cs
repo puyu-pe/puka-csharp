@@ -43,6 +43,7 @@ namespace puka.util
             else
             {
                 MessageBox.Show("No se encontró una impresora predeterminada.");
+                throw new Exception("No se encontró una impresora predeterminada.");
             }
         }
         private List<PrintDocument> GeneratePrintDataList(int times)
