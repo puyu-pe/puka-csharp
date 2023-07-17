@@ -123,6 +123,7 @@
       resources.ApplyResources(btnCancel, "btnCancel");
       btnCancel.Name = "btnCancel";
       btnCancel.UseVisualStyleBackColor = false;
+      btnCancel.Click += OnCancel;
       // 
       // lblTitle
       // 

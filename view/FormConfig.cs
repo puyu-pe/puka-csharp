@@ -29,5 +29,10 @@ namespace puka.view
       return String.Format("{0}/{1}-{2}-{3}", domainBifrost, namespaceBifrost, ruc, suffixCompany);
     }
 
+    private void OnCancel(object sender, EventArgs e)
+    {
+			Dispose();
+			Application.Exit();
+    }
   }
 }
