@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace puka.view
 {
-    public partial class FormConfig : Form
+  public partial class FormConfig : Form
   {
 
 
@@ -31,8 +31,14 @@ namespace puka.view
 
     private void OnCancel(object sender, EventArgs e)
     {
-			Dispose();
-			Application.Exit();
+      Dispose();
+      Application.Exit();
+    }
+
+    private void OnClose(object sender, FormClosingEventArgs e)
+    {
+      Dispose();
+      Application.Exit();
     }
   }
 }

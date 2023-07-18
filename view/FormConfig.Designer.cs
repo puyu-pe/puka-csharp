@@ -150,6 +150,7 @@
       Controls.Add(btnAccept);
       FormBorderStyle = FormBorderStyle.FixedSingle;
       Name = "FormConfig";
+      FormClosing += OnClose;
       primaryContainer.ResumeLayout(false);
       groupCompany.ResumeLayout(false);
       groupCompany.PerformLayout();

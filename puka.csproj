@@ -1,23 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <UseWindowsForms>true</UseWindowsForms>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net7.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<UseWindowsForms>true</UseWindowsForms>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Indigina.Printing" Version="1.1.53" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="NLog.Config" Version="4.7.15" />
-    <PackageReference Include="Ookii.Dialogs.WinForms" Version="4.0.0" />
-	<PackageReference Include="SocketIOClient" Version="3.0.6" />
-	<PackageReference Include="SocketIOClient.Newtonsoft.Json" Version="3.0.0" />
-    <PackageReference Include="QRCoder" Version="1.4.3" />
-    <PackageReference Include="SocketIOClient" Version="3.0.8" />
-    <PackageReference Include="SocketIOClient.Newtonsoft.Json" Version="3.0.7" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Indigina.Printing" Version="1.1.53" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="NLog.Config" Version="4.7.15" />
+		<PackageReference Include="Ookii.Dialogs.WinForms" Version="4.0.0" />
+		<PackageReference Include="SocketIOClient" Version="3.0.6" />
+		<PackageReference Include="SocketIOClient.Newtonsoft.Json" Version="3.0.0" />
+		<PackageReference Include="QRCoder" Version="1.4.3" />
+	</ItemGroup>
 
 </Project>
