@@ -3,7 +3,6 @@ using Newtonsoft.Json.Linq;
 using QRCoder;
 using System.Drawing.Printing;
 using DrawingBrushes = System.Drawing.Brushes;
-using ColorElement = System.Drawing.Color;
 using Image = System.Drawing.Image;
 
 namespace puka.util
@@ -43,7 +42,6 @@ namespace puka.util
             else
             {
                 MessageBox.Show("No se encontró una impresora predeterminada.");
-                throw new Exception("No se encontró una impresora predeterminada.");
             }
         }
         private List<PrintDocument> GeneratePrintDataList(int times)
@@ -80,9 +78,9 @@ namespace puka.util
         private void DefineMarginPage(PrintDocument printDocument)
         {
             float leftMargin = 0.1f;   // Margen izquierdo de 1 pulgada
-            float rightMargin = 0.2f;  // Margen derecho de 1 pulgada
+            float rightMargin = 0.1f;  // Margen derecho de 1 pulgada
             float topMargin = 0.1f;    // Margen superior de 1.5 pulgadas
-            float bottomMargin = 1f; // Margen inferior de 1 pulgada
+            float bottomMargin = 0.5f; // Margen inferior de 1 pulgada
 
             int leftMarginInPixels = (int)(leftMargin * 100);
             int rightMarginInPixels = (int)(rightMargin * 100);
@@ -180,11 +178,9 @@ namespace puka.util
                 }
                 else if (this.data.business.comercialDescription.type == "img")
                 {
-                    string appDirectory = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory);
-                    string parentDirectory = Path.GetDirectoryName(appDirectory);
-                    string childDirectory = Path.GetDirectoryName(parentDirectory);
+                    string appDirectory = Path.Combine(Directory.GetCurrentDirectory(), "img");
 
-                    string imagePath = Path.Combine(childDirectory, "img", "logo.png");
+                    string imagePath = Path.Combine(appDirectory, "logo.png");
 
                     if (!File.Exists(imagePath))
                     {
@@ -200,18 +196,7 @@ namespace puka.util
 
                         Rectangle logoRect = new Rectangle(imageX, e.MarginBounds.Top, logoImage.Width, logoImage.Height);
                         e.Graphics.DrawImage(logoImage, logoRect, new Rectangle(0, 0, logoImage.Width, logoImage.Height), GraphicsUnit.Pixel);
-                        this.positionY += logoRect.Height;
-                    };
-                }
-
-                if (this.data.business.description != null)
-                {
-                    printDocument.PrintPage += (sender, e) =>
-                    {
-                        Font font = new Font("Arial", 10, FontStyle.Regular);
-                        RectangleF textRectDescription = TextCenterValue(this.data.business.description.ToString(), e, font, stringFormat);
-                        e.Graphics.DrawString(this.data.business.description.ToString(), font, DrawingBrushes.Black, textRectDescription, stringFormat);
-                        this.positionY += textRectDescription.Height;
+                        this.positionY += logoRect.Height * 1.1f;
                     };
                 }
             }
@@ -220,6 +205,17 @@ namespace puka.util
                 printDocument.PrintPage += (sender, e) =>
                 {
                     this.positionY = e.MarginBounds.Y;
+                };
+            }
+
+            if (this.data.business.description != null)
+            {
+                printDocument.PrintPage += (sender, e) =>
+                {
+                    Font font = new Font("Arial", 10, FontStyle.Regular);
+                    RectangleF textRectDescription = TextCenterValue(this.data.business.description.ToString(), e, font, stringFormat);
+                    e.Graphics.DrawString(this.data.business.description.ToString(), font, DrawingBrushes.Black, textRectDescription, stringFormat);
+                    this.positionY += textRectDescription.Height * 1.5f;
                 };
             }
         }
@@ -267,7 +263,7 @@ namespace puka.util
                     {
                         printDocument.PrintPage += (sender, e) =>
                         {
-                            string text = this.data.document.description.ToString() + "\n" + this.data.document.indentifier.ToString();
+                            string text = this.data.document.description.ToString() + "  " + this.data.document.indentifier.ToString();
                             RectangleF textRectDocument = TextCenterValue(text, e, font, stringFormat);
                             e.Graphics.DrawString(text, font, DrawingBrushes.Black, textRectDocument, stringFormat);
                             this.positionY += textRectDocument.Height;
@@ -277,7 +273,7 @@ namespace puka.util
                     {
                         printDocument.PrintPage += (sender, e) =>
                         {
-                            string text = this.data.document.ToString() + "\n" + this.data.documentId.ToString();
+                            string text = this.data.document.ToString() + "  " + this.data.documentId.ToString();
                             RectangleF textRectDocumentLegal = TextCenterValue(text, e, font, stringFormat);
                             e.Graphics.DrawString(text, font, DrawingBrushes.Black, textRectDocumentLegal, stringFormat);
                             this.positionY += textRectDocumentLegal.Height;
@@ -316,12 +312,12 @@ namespace puka.util
                         this.positionY += textRectCustomer.Height;
                     }
                 }
-                else
+                /*else
                 {
                     string defaultCustomer = "--".PadRight(this.width);
                     e.Graphics.DrawString(defaultCustomer, new Font("Arial", 10, FontStyle.Regular), DrawingBrushes.Black, e.MarginBounds.Left, e.MarginBounds.Top);
                     this.positionY += lineHeight;
-                }
+                }*/
             };
         }
 
@@ -358,16 +354,17 @@ namespace puka.util
                 Font emphasisFont = new Font("Arial", 8, FontStyle.Bold);
                 Font regularFont = new Font("Arial", 8, FontStyle.Regular);
                 float lineHeight = regularFont.GetHeight(e.Graphics);
+
                 if (this.data.items != null)
                 {
                     string totalText = "TOTAL".PadRight(7);
 
-                    float totalXPos = PositionXLeft(totalText, regularFont, e);
+                    float totalXPos = PositionXRight(totalText, regularFont, e);
 
                     if (this.data.items.Count > 0 && this.data.items[0].quantity != null)
                     {
                         e.Graphics.DrawString("CAN".PadLeft(4) + " DESCRIPCIÓN", emphasisFont, DrawingBrushes.Black, e.MarginBounds.Left, this.positionY);
-                        e.Graphics.DrawString(totalText, emphasisFont, DrawingBrushes.Black, totalXPos, this.positionY);
+                        //e.Graphics.DrawString(totalText, emphasisFont, DrawingBrushes.Black, totalXPos, this.positionY);
                     }
                     else
                     {
@@ -393,8 +390,8 @@ namespace puka.util
 
                             if (item.totalPrice != null)
                             {
-                                string totalPrice = item.totalPrice.ToString().PadRight(7);
-                                float totalPositionX = PositionXLeft(totalPrice, regularFont, e);
+                                string totalPrice = item.totalPrice.ToString("F2").PadRight(7);
+                                float totalPositionX = PositionXRight(totalPrice, regularFont, e);
                                 e.Graphics.DrawString(totalPrice, regularFont, DrawingBrushes.Black, totalPositionX, this.positionY, stringFormat);
                                 this.positionY += lineHeight;
                             }
@@ -403,16 +400,16 @@ namespace puka.util
                         {
                             if (item.quantity != null && item.description != null)
                             {
-                                string quantity = item.quantity.ToString().PadLeft(4);
-                                string description = (" " + item.description.ToString());
+                                string quantity = item.quantity.ToString().PadLeft(7);
+                                string description = ("  " + item.description.ToString());
 
                                 string totalPrice = "";
                                 if (item.totalPrice != null)
                                 {
-                                    totalPrice = item.totalPrice.ToString().PadLeft(7);
+                                    totalPrice = item.totalPrice.ToString("F2").PadLeft(7);
                                 }
 
-                                float totalPositionX = PositionXLeft(totalPrice, regularFont, e);
+                                float totalPositionX = PositionXRight(totalPrice, regularFont, e);
 
                                 e.Graphics.DrawString(quantity + description, regularFont, DrawingBrushes.Black, e.MarginBounds.Left, this.positionY);
                                 e.Graphics.DrawString(totalPrice, regularFont, DrawingBrushes.Black, totalPositionX, this.positionY, stringFormat);
@@ -433,6 +430,24 @@ namespace puka.util
             };
         }
 
+        private int CalculateMaxCharacterWidth(Dictionary<string, object> dictionary)
+        {
+            int maxStringLength = 0;
+
+            foreach (var kvp in dictionary)
+            {
+                string valueString = kvp.Key.ToString();
+                int valueLength = valueString.Length;
+
+                if (valueLength > maxStringLength)
+                {
+                    maxStringLength = valueLength;
+                }
+            }
+
+            return maxStringLength;
+        }
+
         private void Amounts(PrintDocument printDocument)
         {
             if (this.data.amounts == null)
@@ -446,14 +461,17 @@ namespace puka.util
                 var jsonString = JsonConvert.SerializeObject(this.data.amounts);
                 var dictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonString);
 
+                int maxCharacterWidth = CalculateMaxCharacterWidth(dictionary);
+
                 foreach (var kvp in dictionary)
                 {
                     string field = kvp.Key;
-                    object value = kvp.Value;
+                    string value = kvp.Value.ToString();
+                    int valueLength = (maxCharacterWidth - field.Length) * 2;
 
-                    string valueFinal = (field + " : " + value).PadRight(7);
+                    string valueFinal = field + " : " + value.PadLeft(valueLength);
 
-                    float totalPositionX = PositionXLeft(valueFinal, regularFont, e);
+                    float totalPositionX = PositionXRight(valueFinal, regularFont, e);
                     e.Graphics.DrawString(valueFinal, regularFont, DrawingBrushes.Black, totalPositionX, this.positionY);
 
                     this.positionY += lineHeight;
@@ -463,7 +481,6 @@ namespace puka.util
                 this.positionY += lineHeight;
             };
         }
-
 
         private void AdditionalFooter(PrintDocument printDocument)
         {
@@ -513,7 +530,7 @@ namespace puka.util
                 }
                 else
                 {
-                    RectangleF textRectMessage = TextLeftValue(this.data.finalMessage.ToString(), e, regularFont, stringFormat);
+                    RectangleF textRectMessage = TextCenterValue(this.data.finalMessage.ToString(), e, regularFont, stringFormat);
                     e.Graphics.DrawString(this.data.finalMessage.ToString(), regularFont, DrawingBrushes.Black, textRectMessage, stringFormat);
                     this.positionY += textRectMessage.Height;
                 }
@@ -530,7 +547,7 @@ namespace puka.util
                 Font regularFont = new Font("Arial", 10, FontStyle.Regular);
 
                 float lineHeight = regularFont.GetHeight(e.Graphics);
-                float qrWidth = 150;
+                float qrWidth = 100;
                 float qrXPos = e.MarginBounds.Left + (e.MarginBounds.Width - qrWidth) / 2;
 
 
@@ -546,7 +563,7 @@ namespace puka.util
                     QRCode qrCode = new QRCode(qrCodeData);
 
                     // Tamaño actual dividido por 2
-                    Bitmap qrCodeImage = qrCode.GetGraphic(3);
+                    Bitmap qrCodeImage = qrCode.GetGraphic(2);
 
                     e.Graphics.DrawImage(qrCodeImage, qrXPos, this.positionY);
                     this.positionY += qrCodeImage.Height + lineHeight;
@@ -567,7 +584,7 @@ namespace puka.util
 
                 graphics.DrawString(text, font, DrawingBrushes.Black, x, this.positionY);
 
-                this.positionY += font.GetHeight(e.Graphics);
+                this.positionY += font.GetHeight(e.Graphics) * 1.5f;
             };
         }
 
@@ -576,34 +593,38 @@ namespace puka.util
             if (this.data.textBackgroundInverted == null)
                 return;
 
-            Font font = new Font("Arial", 12, FontStyle.Regular);
+            Font font = new Font("Arial", 10, FontStyle.Regular);
             string text = $" {this.data.textBackgroundInverted} ";
 
             printDocument.PrintPage += (sender, e) =>
             {
                 Graphics graphics = e.Graphics;
 
-                //Color originalBackColor = e.PageSettings.Color;
-
-                //Color invertedBackColor = InvertColor(originalBackColor);
-                //e.PageSettings.Color = invertedBackColor;
-
+                // Obtener el tamaño del texto
                 SizeF textSize = graphics.MeasureString(text, font);
-                float x = (this.width - textSize.Width) / 2;
+
+                // Calcular las coordenadas x e y para centrar el texto horizontalmente en el rectángulo
+                int pageWidth = e.PageBounds.Width;
+                float x = (pageWidth - textSize.Width) / 2;
                 float y = this.positionY;
 
-                //graphics.FillRectangle(new SolidBrush(invertedBackColor), x, y, textSize.Width, textSize.Height);
+                // Ancho del rectángulo que ocupa toda la anchura de la página (márgenes izquierdo y derecho)
+                float rectangleWidth = e.MarginBounds.Right - e.MarginBounds.Left;
 
-                graphics.DrawString(text, font, DrawingBrushes.Black, x, y);
+                // Color del fondo invertido (negro)
+                Color invertedBackColor = Color.Black;
 
-                this.positionY += (int)textSize.Height;
+                // Dibujar el fondo invertido (rectángulo negro)
+                graphics.FillRectangle(new SolidBrush(invertedBackColor), e.MarginBounds.Left, y, rectangleWidth, textSize.Height);
 
-                //e.PageSettings.ColorElement = originalBackColor;
+                // Cambiar el color del texto a blanco
+                SolidBrush textBrush = new SolidBrush(Color.White);
+
+                // Dibujar el texto en el rectángulo con color blanco
+                graphics.DrawString(text, font, textBrush, x, y);
+
+                this.positionY += (int)textSize.Height * 1.5f;
             };
-        }
-        private ColorElement InvertColor(ColorElement color)
-        {
-            return ColorElement.FromArgb(color.ToArgb() ^ 0xffffff);
         }
 
         private void TitleExtra(PrintDocument printDocument)
@@ -645,7 +666,7 @@ namespace puka.util
             return stringFormat;
         }
 
-        private float PositionXLeft(string text, Font font, PrintPageEventArgs e)
+        private float PositionXRight(string text, Font font, PrintPageEventArgs e)
         {
             SizeF totalTextSize = e.Graphics.MeasureString(text, font);
             float totalXPos = e.MarginBounds.Right - totalTextSize.Width;

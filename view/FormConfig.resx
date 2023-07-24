@@ -121,18 +121,75 @@
   <data name="primaryContainer.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
     <value>GrowAndShrink</value>
   </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="lblLogoImage.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblLogoImage.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="lblLogoImage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>10, 120</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="lblLogoImage.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 0, 4, 0</value>
+  </data>
+  <data name="lblLogoImage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>89, 25</value>
+  </data>
+  <data name="lblLogoImage.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="lblLogoImage.Text" xml:space="preserve">
+    <value>Logotipo:</value>
+  </data>
+  <data name="&gt;&gt;lblLogoImage.Name" xml:space="preserve">
+    <value>lblLogoImage</value>
+  </data>
+  <data name="&gt;&gt;lblLogoImage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblLogoImage.Parent" xml:space="preserve">
+    <value>groupCompany</value>
+  </data>
+  <data name="&gt;&gt;lblLogoImage.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="btnPathImage.Location" type="System.Drawing.Point, System.Drawing">
+    <value>208, 120</value>
+  </data>
+  <data name="btnPathImage.Size" type="System.Drawing.Size, System.Drawing">
+    <value>253, 36</value>
+  </data>
+  <data name="btnPathImage.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="btnPathImage.Text" xml:space="preserve">
+    <value>Seleccione..</value>
+  </data>
+  <data name="&gt;&gt;btnPathImage.Name" xml:space="preserve">
+    <value>btnPathImage</value>
+  </data>
+  <data name="&gt;&gt;btnPathImage.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnPathImage.Parent" xml:space="preserve">
+    <value>groupCompany</value>
+  </data>
+  <data name="&gt;&gt;btnPathImage.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <data name="textRUC.Location" type="System.Drawing.Point, System.Drawing">
     <value>208, 76</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="textRUC.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>4, 4, 4, 4</value>
   </data>
   <data name="textRUC.Size" type="System.Drawing.Size, System.Drawing">
     <value>253, 31</value>
   </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="textRUC.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
   </data>
@@ -146,7 +203,7 @@
     <value>groupCompany</value>
   </data>
   <data name="&gt;&gt;textRUC.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>2</value>
   </data>
   <data name="lblRUC.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -176,7 +233,7 @@
     <value>groupCompany</value>
   </data>
   <data name="&gt;&gt;lblRUC.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>3</value>
   </data>
   <data name="lblSuffix.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -206,7 +263,7 @@
     <value>groupCompany</value>
   </data>
   <data name="&gt;&gt;lblSuffix.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>4</value>
   </data>
   <data name="textSuffix.Location" type="System.Drawing.Point, System.Drawing">
     <value>208, 29</value>
@@ -230,7 +287,7 @@
     <value>groupCompany</value>
   </data>
   <data name="&gt;&gt;textSuffix.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>5</value>
   </data>
   <data name="groupCompany.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 4</value>
@@ -242,7 +299,7 @@
     <value>4, 4, 4, 4</value>
   </data>
   <data name="groupCompany.Size" type="System.Drawing.Size, System.Drawing">
-    <value>496, 156</value>
+    <value>496, 169</value>
   </data>
   <data name="groupCompany.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -311,13 +368,13 @@
     <value>1</value>
   </data>
   <data name="textDomain.Location" type="System.Drawing.Point, System.Drawing">
-    <value>95, 32</value>
+    <value>115, 32</value>
   </data>
   <data name="textDomain.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>4, 4, 4, 4</value>
   </data>
   <data name="textDomain.Size" type="System.Drawing.Size, System.Drawing">
-    <value>373, 31</value>
+    <value>353, 31</value>
   </data>
   <data name="textDomain.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -377,7 +434,7 @@
     <value>4, 4, 4, 4</value>
   </data>
   <data name="groupServer.Size" type="System.Drawing.Size, System.Drawing">
-    <value>476, 156</value>
+    <value>476, 169</value>
   </data>
   <data name="groupServer.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
@@ -404,7 +461,7 @@
     <value>4, 4, 4, 4</value>
   </data>
   <data name="primaryContainer.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1002, 184</value>
+    <value>1002, 201</value>
   </data>
   <data name="primaryContainer.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -422,7 +479,7 @@
     <value>1</value>
   </data>
   <data name="btnCancel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>747, 293</value>
+    <value>747, 312</value>
   </data>
   <data name="btnCancel.Size" type="System.Drawing.Size, System.Drawing">
     <value>119, 45</value>
@@ -482,7 +539,7 @@
     <value>2</value>
   </data>
   <data name="btnAccept.Location" type="System.Drawing.Point, System.Drawing">
-    <value>873, 294</value>
+    <value>873, 311</value>
   </data>
   <data name="btnAccept.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>4, 4, 4, 4</value>
@@ -518,7 +575,7 @@
     <value>10, 25</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>1000, 349</value>
+    <value>1000, 367</value>
   </data>
   <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
     <value>Segoe UI, 10.8pt</value>

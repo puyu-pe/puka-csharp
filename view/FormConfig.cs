@@ -11,34 +11,81 @@ using System.Windows.Forms;
 
 namespace puka.view
 {
-  public partial class FormConfig : Form
-  {
-
-
-    public FormConfig()
+    public partial class FormConfig : Form
     {
-      InitializeComponent();
-    }
+        private string pathFileImage = "";
 
-    public string GetUrlBifrostServer()
-    {
-      string ruc = textRUC.Text.Trim();
-      string suffixCompany = textSuffix.Text.Trim();
-      string domainBifrost = textDomain.Text.Trim();
-      string namespaceBifrost = textNamespace.Text.Trim();
-      return String.Format("{0}/{1}-{2}-{3}", domainBifrost, namespaceBifrost, ruc, suffixCompany);
-    }
+        public FormConfig()
+        {
+            InitializeComponent();
+        }
 
-    private void OnCancel(object sender, EventArgs e)
-    {
-      Dispose();
-      Application.Exit();
-    }
+        public string GetUrlBifrostServer()
+        {
+            if (!string.IsNullOrEmpty(pathFileImage))
+            {
+                string fileDestiny = Path.Combine(Directory.GetCurrentDirectory(), "img");
 
-    private void OnClose(object sender, FormClosingEventArgs e)
-    {
-      Dispose();
-      Application.Exit();
+                createFolderImage();
+
+                string nameFileDestiny = Path.Combine(fileDestiny, "logo" + Path.GetExtension(pathFileImage));
+
+                try
+                {
+                    if (File.Exists(nameFileDestiny))
+                    {
+                        File.Delete(nameFileDestiny);
+                    }
+
+                    File.Copy(pathFileImage, nameFileDestiny);
+                    MessageBox.Show("Imagen guardada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al guardar la imagen: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            string ruc = textRUC.Text.Trim();
+            string suffixCompany = textSuffix.Text.Trim();
+            string domainBifrost = textDomain.Text.Trim();
+            string namespaceBifrost = textNamespace.Text.Trim();
+            return String.Format("{0}/{1}-{2}-{3}", domainBifrost, namespaceBifrost, ruc, suffixCompany);
+        }
+
+        private void OnCancel(object sender, EventArgs e)
+        {
+            Dispose();
+            Application.Exit();
+        }
+
+        private void OnClose(object sender, FormClosingEventArgs e)
+        {
+            Dispose();
+            Application.Exit();
+        }
+
+        private void btnPathImage_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Archivo de imagen (*.png)|*.png";
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                pathFileImage = openFileDialog.FileName;
+                MessageBox.Show(pathFileImage);
+            }
+        }
+
+        private void createFolderImage()
+        {
+            string fileDestinyOriginal = Path.Combine(Directory.GetCurrentDirectory(), "img");
+
+            // Crear la carpeta "img" si no existe.
+            if (!Directory.Exists(fileDestinyOriginal))
+            {
+                Directory.CreateDirectory(fileDestinyOriginal);
+            }
+        }
     }
-  }
 }
