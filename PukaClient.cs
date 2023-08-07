@@ -33,8 +33,9 @@ public class PukaClient
 			//TODO: recorrer los tickets
 			//bifrostResponse.Data;
 			await client.EmitAsync("printer:printed", new JObject { ["key"] = "34234" });
-			//imprimir la los tickets , Data[{ key =>  {created_at, tickets, namespace}}, ...]
-		}else{
+            //imprimir la los tickets , Data[{ key =>  {created_at, tickets, namespace}}, ...]
+        }
+        else{
 			Program.Logger.Warn("PukaClient: no se pudo recuperar la cola de impresión");
 		}
 	}
