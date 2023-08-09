@@ -61,7 +61,7 @@ namespace puka.view
 
         private void OnClose(object sender, FormClosingEventArgs e)
         {
-            Dispose();
+            //Dispose();
             Application.Exit();
         }
 
