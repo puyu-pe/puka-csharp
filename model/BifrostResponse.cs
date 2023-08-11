@@ -1,7 +1,7 @@
 namespace puka;
 
 using System.Text.Json.Serialization;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
 
 class BifrostResponse
 {
@@ -9,7 +9,7 @@ class BifrostResponse
 	public string? Message { get; set; }
 
 	[JsonPropertyName("data")]
-	public JObject? Data { get; set; }
+	public Dictionary<string,JsonElement>? Data { get; set; }
 
 	[JsonPropertyName("status")]
 	public string? Status { get; set; }
