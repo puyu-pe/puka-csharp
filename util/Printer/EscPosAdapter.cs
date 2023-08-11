@@ -2,6 +2,9 @@
 using ESCPOS_NET.Emitters;
 using ESCPOS_NET.Utilities;
 using printer_aplication_desktop.utils;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 

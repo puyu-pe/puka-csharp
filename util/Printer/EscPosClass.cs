@@ -1,6 +1,10 @@
 ﻿using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using printer_aplication_desktop.utils;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Windows;
 
 namespace printer_aplication_desktop.components
 {
@@ -157,8 +161,7 @@ namespace printer_aplication_desktop.components
 
                     if (!File.Exists(imagePath))
                     {
-                        // throw new Exception("No se encontró el logo");
-                        connectorPrinter.PrintDataLine("--");
+                        throw new Exception("No se encontró el logo");
                     }
 
                     result = connectorPrinter.CombinePrinterParameter(
