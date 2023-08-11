@@ -1,10 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using printer_aplication_desktop.utils;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Windows;
 
 namespace printer_aplication_desktop.components
 {
@@ -15,7 +11,7 @@ namespace printer_aplication_desktop.components
         private string type;
         private int times;
         private dynamic data;
-        private IPrinterEscPos connectorPrinter;
+        private IPrinterEscPos? connectorPrinter;
 
         public EscPosClass(dynamic data) 
         {
@@ -31,7 +27,7 @@ namespace printer_aplication_desktop.components
 
             for (int i=0 ; i<times ; i++) 
             {
-                connectorPrinter.Print(PrintLayout());
+                connectorPrinter?.Print(PrintLayout());
             }
         }
 
@@ -161,7 +157,8 @@ namespace printer_aplication_desktop.components
 
                     if (!File.Exists(imagePath))
                     {
-                        throw new Exception("No se encontró el logo");
+                        // throw new Exception("No se encontró el logo");
+                        connectorPrinter.PrintDataLine("--");
                     }
 
                     result = connectorPrinter.CombinePrinterParameter(
