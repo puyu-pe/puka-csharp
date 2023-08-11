@@ -1,7 +1,10 @@
 namespace puka;
 
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using printer_aplication_desktop.components;
 using SocketIOClient;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 public class PukaClient
 {
@@ -30,10 +33,19 @@ public class PukaClient
 		if (bifrostResponse.Status == "success")
 		{
 			Program.Logger.Info("PukaClient: Se obtuvo toda la cola de impresión");
-			//TODO: recorrer los tickets
-			//bifrostResponse.Data;
-			await client.EmitAsync("printer:printed", new JObject { ["key"] = "34234" });
-            //imprimir la los tickets , Data[{ key =>  {created_at, tickets, namespace}}, ...]
+
+			//if (bifrostResponse.Data != null) {
+                foreach (dynamic register in bifrostResponse.Data)
+                {
+					var json = register[""];
+
+                    dynamic dataPrinter = JsonConvert.DeserializeObject<dynamic>(json.GetValue("tickets").ToString());
+				
+                    EscPosClass connectorPrinterFinal = new EscPosClass(dataPrinter);
+
+                    connectorPrinterFinal.PrinterDocument();
+                }
+            //}          
         }
         else{
 			Program.Logger.Warn("PukaClient: no se pudo recuperar la cola de impresión");
