@@ -1,6 +1,8 @@
 namespace puka;
 
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using printer_aplication_desktop.components;
 using SocketIOClient;
 using System.Text.Json;
 
@@ -34,6 +36,9 @@ public class PukaClient
 				JObject register = JObject.Parse(kvp.Value.ToString());
 				if (register != null)
 				{
+					var tickets = JsonConvert.DeserializeObject<dynamic>(register.GetValue("tickets").ToString())[0];
+					EscPosClass printer = new EscPosClass(tickets);
+					printer.PrinterDocument();
 					await client.EmitAsync("printer:printed", new BifrostDeleteRequest { Key = kvp.Key });
 				}
 			}
