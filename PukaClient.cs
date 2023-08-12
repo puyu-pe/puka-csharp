@@ -37,6 +37,7 @@ public class PukaClient
 				if (register != null)
 				{
 					var tickets = JsonConvert.DeserializeObject<dynamic>(register.GetValue("tickets").ToString())[0];
+					Program.Logger.Debug(tickets);
 					EscPosClass printer = new EscPosClass(tickets);
 					printer.PrinterDocument();
 					await client.EmitAsync("printer:printed", new BifrostDeleteRequest { Key = kvp.Key });

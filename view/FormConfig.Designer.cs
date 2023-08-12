@@ -154,11 +154,13 @@
       resources.ApplyResources(btnAccept, "btnAccept");
       btnAccept.Name = "btnAccept";
       btnAccept.UseVisualStyleBackColor = false;
+      btnAccept.Click += OnAccept;
       // 
       // FormConfig
       // 
       resources.ApplyResources(this, "$this");
       AutoScaleMode = AutoScaleMode.Font;
+      AutoValidate = AutoValidate.EnableAllowFocusChange;
       BackColor = SystemColors.HighlightText;
       Controls.Add(btnCancel);
       Controls.Add(primaryContainer);

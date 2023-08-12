@@ -39,8 +39,11 @@ public class UserConfig
 				Program.Logger.Warn("No se ha cargado el archivo de configuraciones, UserConfig.Load()");
 				return;
 			}
-			config.AppSettings.Settings.Add(key, value);
-			config.Save(ConfigurationSaveMode.Modified);
+			if (Get(key) == null)
+			{
+				config.AppSettings.Settings.Add(key, value);
+				config.Save(ConfigurationSaveMode.Modified);
+			}
 		}
 		catch (System.Exception)
 		{
