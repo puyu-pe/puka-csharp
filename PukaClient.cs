@@ -29,21 +29,55 @@ public class PukaClient
 
 	private async Task PrintTickets(Dictionary<string, JsonElement>? queue)
 	{
-		if (queue != null)
+		if (queue == null)
+			return;
+		foreach (KeyValuePair<string, JsonElement> kvp in queue)
 		{
-			foreach (KeyValuePair<string, JsonElement> kvp in queue)
+			if (!kvp.Value.TryGetProperty("tickets", out JsonElement dataToPrintFromServer))
 			{
-				JObject register = JObject.Parse(kvp.Value.ToString());
-				if (register != null)
-				{
-					var tickets = JsonConvert.DeserializeObject<dynamic>(register.GetValue("tickets").ToString())[0];
-					Program.Logger.Debug(tickets);
-					EscPosClass printer = new EscPosClass(tickets);
-					printer.PrinterDocument();
-					await client.EmitAsync("printer:printed", new BifrostDeleteRequest { Key = kvp.Key });
-				}
+				Program.Logger.Warn($"PrintTickets: No se obtuvieron los tickets de ${kvp.Key} del servidor");
+				continue;
 			}
+
+			if (!TryConvertObjectFromJson(dataToPrintFromServer, out dynamic? dataToPrintObject))
+			{
+				Program.Logger.Warn($"PrintTickets: No se pudo convertir los tickets de ${kvp.Key} a un dynamic object");
+				continue;
+			}
+
+			if (!(dataToPrintObject is Array))
+			{
+				Program.Logger.Warn($"PrintTickets: la información a imprimir de ${kvp.Key} no es un array");
+				continue;
+			}
+
+			var tickets = dataToPrintObject[0];
+			//Todo: comentar la siguiente linea en producción
+			Program.Logger.Debug("tickets");
+			new EscPosClass(tickets).PrinterDocument();
+			await client.EmitAsync("printer:printed", new BifrostDeleteRequest { Key = kvp.Key });
+
+			// JObject register = JObject.Parse(kvp.Value.ToString());
+			// if (register == null)
+			// 	continue;
+			// var dataToPrintFromServer = register.GetValue("tickets");
+			// if (dataToPrintFromServer == null)
+			// 	continue;
+			// var dataToPrintObject = JsonConvert.DeserializeObject<dynamic>(dataToPrintFromServer.ToString());
+			// if (dataToPrintObject == null)
+			// 	continue;
+			// var tickets = dataToPrintObject[0];
+			// Program.Logger.Debug(tickets);
+			// EscPosClass printer = new EscPosClass(tickets);
+			// printer.PrinterDocument();
+			// await client.EmitAsync("printer:printed", new BifrostDeleteRequest { Key = kvp.Key });
 		}
+	}
+
+	private bool TryConvertObjectFromJson<Type>(JsonElement json, out Type? obj)
+	{
+		obj = JsonConvert.DeserializeObject<Type>(json.ToString());
+		return obj != null;
 	}
 
 	private async void OnLoadQueue(SocketIOResponse response)

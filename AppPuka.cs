@@ -22,23 +22,35 @@ public class AppPuka : ApplicationContext
 
 	private async void Run()
 	{
-		FormConfig formConfig = new();
-		uri = UserConfig.Get("uri");
+		// FormConfig formConfig = new();
+		// uri = UserConfig.Get("uri");
 
-		if (string.IsNullOrEmpty(uri))
-		{
-			formConfig.ShowDialog();
-			uri = formConfig.GetUrlBifrostServer();
-			if (uri.Length > 8)
-			{
-				UserConfig.Add("uri", uri);
-			}
-		}
-		else
-		{
-			new TrayIconPrinter().Show();
-			await new PukaClient(uri).Start();
-		}
+		// if (string.IsNullOrEmpty(uri))
+		// {
+		// 	formConfig.ShowDialog();
+		// 	uri = formConfig.GetUrlBifrostServer();
+		// 	if (uri.Length > 8)
+		// 	{
+		// 		UserConfig.Add("uri", uri);
+		// 	}
+		// }
+		// else
+		// {
+		uri = MakeUrlBifrost();
+		new PukaForm().ShowDialog();
+		new TrayIconPrinter().Show();
+		await new PukaClient(uri).Start();
+		// }
 	}
+
+	private string MakeUrlBifrost()
+	{
+		string ruc = UserConfig.Get("ruc") ?? "";
+		string suffix = UserConfig.Get("suffix") ?? "";
+		string urlBifrost = UserConfig.Get("url-bifrost") ?? "";
+		string namespaceBifrost = UserConfig.Get("namespace") ?? "";
+		return string.Concat(urlBifrost, "/", namespaceBifrost, "-", ruc, "-", suffix);
+	}
+
 }
 
