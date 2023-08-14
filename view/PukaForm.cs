@@ -12,10 +12,10 @@ namespace puka.view
 {
   public partial class PukaForm : Form
   {
-		private string logoImagePathSnapshot;
+    private string logoImagePathSnapshot;
     public PukaForm()
     {
-			logoImagePathSnapshot = "";
+      logoImagePathSnapshot = "";
       InitializeComponent();
     }
 
@@ -31,7 +31,7 @@ namespace puka.view
         string userFolderPath = UserConfig.getPukaFolderPath();
         string logoFileSourcePath = openFileDialog.FileName;
         string logoFileDestinyPath = Path.Combine(userFolderPath, "logo_empresa" + Path.GetExtension(logoFileSourcePath));
-				logoImagePathSnapshot = logoFileDestinyPath;
+        logoImagePathSnapshot = logoFileDestinyPath;
 
         if (File.Exists(logoFileDestinyPath))
         {
@@ -57,15 +57,15 @@ namespace puka.view
       }
     }
 
-    private  void OnAccept(object sender, EventArgs e)
+    private void OnAccept(object sender, EventArgs e)
     {
-			UserConfig.Add("ruc",textRuc.Text.Replace("-","").Trim());
-			UserConfig.Add("suffix",textSuffix.Text.Trim());
-			UserConfig.Add("url-bifrost",textUrlBifrost.Text.Trim());
-			UserConfig.Add("namespace",textNamespace.Text.Trim());
-			UserConfig.Add("logo-path",logoImagePathSnapshot);
-		}
-    
+      UserConfig.Add("ruc", textRuc.Text.Replace("-", "").Trim());
+      UserConfig.Add("suffix", textSuffix.Text.Trim());
+      UserConfig.Add("url-bifrost", textUrlBifrost.Text.Trim());
+      UserConfig.Add("namespace", textNamespace.Text.Trim());
+      UserConfig.Add("logo-path", logoImagePathSnapshot);
+    }
+
 
     private void OnCheckedConfigServerChanged(object sender, EventArgs e)
     {
@@ -73,6 +73,14 @@ namespace puka.view
       textUrlBifrost.ReadOnly = !checkBoxActiveServer.Checked;
       textNamespace.Enabled = checkBoxActiveServer.Checked;
       textNamespace.ReadOnly = !checkBoxActiveServer.Checked;
+    }
+
+    private void OnFormClosing(object sender, FormClosingEventArgs e)
+    {
+			if (e.CloseReason == CloseReason.UserClosing)
+			{
+				Application.Exit();
+			}
     }
   }
 }

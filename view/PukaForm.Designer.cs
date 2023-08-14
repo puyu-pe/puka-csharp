@@ -320,6 +320,7 @@
       Name = "PukaForm";
       Text = "Configuración PUKA-YURES";
       TopMost = true;
+      FormClosing += OnFormClosing;
       containerLayout.ResumeLayout(false);
       headerLayout.ResumeLayout(false);
       headerLayout.PerformLayout();
