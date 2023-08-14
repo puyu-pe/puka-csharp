@@ -1,4 +1,4 @@
-namespace puka;
+namespace puka.app;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -33,48 +33,41 @@ public class PukaClient
 			return;
 		foreach (KeyValuePair<string, JsonElement> kvp in queue)
 		{
-			if (!kvp.Value.TryGetProperty("tickets", out JsonElement dataToPrintFromServer))
+			try
 			{
-				Program.Logger.Warn($"PrintTickets: No se obtuvieron los tickets de ${kvp.Key} del servidor");
-				continue;
+				JObject register = JObject.Parse(kvp.Value.ToString());
+				if (!register.TryGetValue("tickets", out JToken? dataToPrintFromServer))
+				{
+					Program.Logger.Warn($"PrintTickets: No se obtuvieron los tickets de ${kvp.Key} del servidor");
+					continue;
+				}
+
+				if (!TryConvertObjectFromJson(dataToPrintFromServer, out dynamic? dataToPrintObject))
+				{
+					Program.Logger.Warn($"PrintTickets: No se pudo convertir los tickets de ${kvp.Key} a un dynamic object");
+					continue;
+				}
+
+				if (dataToPrintObject == null)
+				{
+					Program.Logger.Warn($"PrintTickets: la información a imprimir de ${kvp.Key} es null");
+					continue;
+				}
+
+				var tickets = dataToPrintObject[0];
+				new EscPosClass(tickets).PrinterDocument();
+				await client.EmitAsync("printer:printed", new BifrostDeleteRequest { Key = kvp.Key });
+			}
+			catch (Exception e)
+			{
+				Program.Logger.Error(e, e.Message);
+				throw;
 			}
 
-			if (!TryConvertObjectFromJson(dataToPrintFromServer, out dynamic? dataToPrintObject))
-			{
-				Program.Logger.Warn($"PrintTickets: No se pudo convertir los tickets de ${kvp.Key} a un dynamic object");
-				continue;
-			}
-
-			if (!(dataToPrintObject is Array))
-			{
-				Program.Logger.Warn($"PrintTickets: la información a imprimir de ${kvp.Key} no es un array");
-				continue;
-			}
-
-			var tickets = dataToPrintObject[0];
-			//Todo: comentar la siguiente linea en producción
-			Program.Logger.Debug("tickets");
-			new EscPosClass(tickets).PrinterDocument();
-			await client.EmitAsync("printer:printed", new BifrostDeleteRequest { Key = kvp.Key });
-
-			// JObject register = JObject.Parse(kvp.Value.ToString());
-			// if (register == null)
-			// 	continue;
-			// var dataToPrintFromServer = register.GetValue("tickets");
-			// if (dataToPrintFromServer == null)
-			// 	continue;
-			// var dataToPrintObject = JsonConvert.DeserializeObject<dynamic>(dataToPrintFromServer.ToString());
-			// if (dataToPrintObject == null)
-			// 	continue;
-			// var tickets = dataToPrintObject[0];
-			// Program.Logger.Debug(tickets);
-			// EscPosClass printer = new EscPosClass(tickets);
-			// printer.PrinterDocument();
-			// await client.EmitAsync("printer:printed", new BifrostDeleteRequest { Key = kvp.Key });
 		}
 	}
 
-	private bool TryConvertObjectFromJson<Type>(JsonElement json, out Type? obj)
+	private bool TryConvertObjectFromJson<Type>(JToken json, out Type? obj)
 	{
 		obj = JsonConvert.DeserializeObject<Type>(json.ToString());
 		return obj != null;

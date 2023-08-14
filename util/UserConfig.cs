@@ -44,13 +44,27 @@ public class UserConfig
 				Program.Logger.Warn("No se ha cargado el archivo de configuraciones, UserConfig.Load()");
 				return;
 			}
-			Remove(key);
 			config.AppSettings.Settings.Add(key, value);
 			config.Save(ConfigurationSaveMode.Modified);
 		}
 		catch (System.Exception)
 		{
 			throw;
+		}
+	}
+
+	public static void Set(string key, string value){
+		try{
+			if(config == null){
+				Program.Logger.Warn("No se ha cargado el archivo de configuraciones, UserConfig.Load()");
+				return;
+			}
+			config.AppSettings.Settings.Remove(key);
+			config.AppSettings.Settings.Add(key, value);
+			config.Save(ConfigurationSaveMode.Modified);
+		}
+		catch{
+
 		}
 	}
 

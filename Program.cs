@@ -1,6 +1,5 @@
-using puka.view;
-
 namespace puka;
+using puka.app;
 
 
 static internal class Program
