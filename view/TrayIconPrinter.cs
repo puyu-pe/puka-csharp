@@ -9,7 +9,7 @@ public class TrayIconPrinter
 		trayIcon = new NotifyIcon()
 		{
 			Text = "PUKA - YURES",
-			Icon = new Icon("printer.ico"),
+			Icon = new Icon("icono.ico"),
 			ContextMenuStrip = new ContextMenuStrip(),
 			Visible = true,
 		};
