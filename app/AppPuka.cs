@@ -37,7 +37,11 @@ public class AppPuka : ApplicationContext
 		string urlBifrost = BifrostConfig.GetUrl();
 		string namespaceBifrost = BifrostConfig.GetNamespace();
 		string suffix = BifrostConfig.GetSuffix();
-		return string.Concat(urlBifrost, "/", namespaceBifrost, "-", ruc, "-", suffix);
+		if (suffix.Length > 0)
+		{
+			suffix = "-" + suffix;
+		}
+		return string.Concat(urlBifrost, "/", namespaceBifrost, "-", ruc, suffix);
 	}
 
 }

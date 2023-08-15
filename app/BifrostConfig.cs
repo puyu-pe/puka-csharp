@@ -74,11 +74,7 @@ public static class BifrostConfig
 	{
 		errors = new List<string>();
 		suffix = suffix.Trim();
-		if (suffix.Length == 0)
-		{
-			errors.Add("El sufijo no debe ser un campo vacio");
-		}
-		bool isValidSuffix = Regex.IsMatch(suffix, @"^\d{1}$", RegexOptions.Multiline);
+		bool isValidSuffix = Regex.IsMatch(suffix, @"^\d?$", RegexOptions.Multiline);
 		if (!isValidSuffix)
 		{
 			errors.Add("El sufijo solo debe tener un digito numérico");
@@ -92,19 +88,23 @@ public static class BifrostConfig
 	}
 
 
-	public static string GetUrl(){
+	public static string GetUrl()
+	{
 		return UserConfig.Get("url-bifrost") ?? "";
 	}
 
-	public static string GetRuc(){
+	public static string GetRuc()
+	{
 		return UserConfig.Get("ruc") ?? "";
 	}
 
-	public static string GetSuffix(){
+	public static string GetSuffix()
+	{
 		return UserConfig.Get("suffix") ?? "";
 	}
 
-	public static string GetNamespace(){
+	public static string GetNamespace()
+	{
 		return UserConfig.Get("namespace") ?? "";
 	}
 }
