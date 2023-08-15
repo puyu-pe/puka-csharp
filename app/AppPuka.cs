@@ -22,13 +22,30 @@ public class AppPuka : ApplicationContext
 
 	private async void Run()
 	{
-		DialogResult dialogResult = new PukaForm().ShowDialog();
-		if (dialogResult == DialogResult.OK)
+		if (!LoadConfigBifrost())
+		{
+			DialogResult dialogResult = new PukaForm().ShowDialog();
+			if (dialogResult == DialogResult.OK)
+			{
+				uri = MakeUrlBifrost();
+				new TrayIconPrinter().Show();
+				await new PukaClient(uri).Start();
+			}
+		}
+		else
 		{
 			uri = MakeUrlBifrost();
 			new TrayIconPrinter().Show();
 			await new PukaClient(uri).Start();
 		}
+	}
+
+	private bool LoadConfigBifrost()
+	{
+		return BifrostConfig.TrySetSuffix(BifrostConfig.GetSuffix(), out var e_suffix)
+			&& BifrostConfig.TrySetNamespace(BifrostConfig.GetNamespace(), out var e_namespace)
+			&& BifrostConfig.TrySetUrl(BifrostConfig.GetUrl(), out var e_url)
+			&& BifrostConfig.TrySetRuc(BifrostConfig.GetRuc(), out var e_ruc);
 	}
 
 	private string MakeUrlBifrost()
