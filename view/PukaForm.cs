@@ -48,7 +48,7 @@ namespace puka.view
 
 			if (openFileDialog.ShowDialog() == DialogResult.OK)
 			{
-				string userFolderPath = UserConfig.getPukaFolderPath();
+				string userFolderPath = UserConfig.GetPukaFolderPath();
 				string logoFileSourcePath = openFileDialog.FileName;
 				string logoFileDestinyPath = Path.Combine(userFolderPath, "logo_empresa" + Path.GetExtension(logoFileSourcePath));
 				logoImagePathSnapshot = logoFileDestinyPath;

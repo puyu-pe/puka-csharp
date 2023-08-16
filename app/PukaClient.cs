@@ -31,6 +31,7 @@ public class PukaClient
 	{
 		if (queue == null)
 			return;
+		Program.Logger.Info($"Se recibe {queue.Count} elementos a imprimir");
 		foreach (KeyValuePair<string, JsonElement> kvp in queue)
 		{
 			try
@@ -55,13 +56,12 @@ public class PukaClient
 				}
 
 				var tickets = dataToPrintObject[0];
-				new EscPosClass(tickets).PrinterDocument();
+				await new EscPosClass(tickets).PrinterDocument();
 				await client.EmitAsync("printer:printed", new BifrostDeleteRequest { Key = kvp.Key });
 			}
 			catch (Exception e)
 			{
-				Program.Logger.Error(e, e.Message);
-				throw;
+				Program.Logger.Warn(e, e.Message);
 			}
 
 		}

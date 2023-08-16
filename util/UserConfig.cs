@@ -14,7 +14,7 @@ public class UserConfig
 
 	public static void Load()
 	{
-		string appFolder = getPukaFolderPath();
+		string appFolder = GetPukaFolderPath();
 
 		configFilePath = Path.Combine(appFolder, "puka.ini");
 		if (!File.Exists(configFilePath))
@@ -27,12 +27,16 @@ public class UserConfig
 		config = ConfigurationManager.OpenMappedExeConfiguration(configFileMap, ConfigurationUserLevel.None);
 	}
 
-	public static string getPukaFolderPath()
+	public static string GetPukaFolderPath()
 	{
 		string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
 		string appFolder = Path.Combine(appDataPath, "puka");
 		Directory.CreateDirectory(appFolder);
 		return appFolder;
+	}
+
+	public static string GetLogoPath(){
+		return Get("logo-path") ?? "";
 	}
 
 	public static void Add(string key, string value)

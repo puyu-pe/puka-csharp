@@ -2,7 +2,7 @@
 {
     public interface IPrinterEscPos
     {
-        void Print(byte[] dataPrintElement);
+        Task Print(byte[] dataPrintElement);
 
         byte[] DoubleHeightWeightText();
 
