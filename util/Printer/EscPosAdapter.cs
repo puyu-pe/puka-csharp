@@ -54,6 +54,28 @@ namespace printer_aplication_desktop.components
 			}
 		}
 
+		public async Task<bool> IsPrinterOnline()
+		{
+			try
+			{
+				if (printer is ImmediateNetworkPrinter printerNetwork)
+				{
+					return await printerNetwork.GetOnlineStatus(epsonPrinter);
+				}
+				if (printer is BasePrinter basePrinter)
+				{
+					//basePrinter.GetStatus(), lanza una excepción por defecto, ver la documentación de la libreria
+					//https://github.com/lukevp/ESC-POS-.NET/blob/master/ESCPOS_NET/Printers/BasePrinter.cs
+					return true;
+				}
+			}
+			catch (System.Exception)
+			{
+				return false;
+			}
+			return false;
+		}
+
 		public async Task Print(byte[] dataPrintElement)
 		{
 			try
@@ -63,7 +85,8 @@ namespace printer_aplication_desktop.components
 					await printerNetWork.WriteAsync(CombinePrinterParameter(dataPrintElement));
 				}
 
-				if(printer is BasePrinter basePrinter){
+				if (printer is BasePrinter basePrinter)
+				{
 					basePrinter.Write(CombinePrinterParameter(dataPrintElement));
 					basePrinter.Dispose();
 				}

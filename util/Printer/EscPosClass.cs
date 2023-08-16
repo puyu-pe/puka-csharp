@@ -25,12 +25,15 @@ namespace printer_aplication_desktop.components
 
 		public async Task PrinterDocument()
 		{
-			ConnectTypePrinter();
-			if (connectorPrinter == null)
-				throw new Exception("connectorPrinter = null en PrinterDocument");
-
 			try
 			{
+				ConnectTypePrinter();
+				if (connectorPrinter == null)
+					throw new Exception("connectorPrinter = null en PrinterDocument");
+				if (!await connectorPrinter.IsPrinterOnline())
+				{
+					throw new Exception("La impresora no esta conectada");
+				}
 				for (int i = 0; i < times; i++)
 				{
 					await connectorPrinter.Print(PrintLayout());

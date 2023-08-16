@@ -4,6 +4,8 @@
     {
         Task Print(byte[] dataPrintElement);
 
+				Task<bool> IsPrinterOnline();
+
         byte[] DoubleHeightWeightText();
 
         byte[] CombinePrinterParameter(params byte[][] dataPrinter);
