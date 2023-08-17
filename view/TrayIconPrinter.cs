@@ -27,10 +27,8 @@ public class TrayIconPrinter
 		trayIcon.ContextMenuStrip.Items.AddRange(new ToolStripItem[]
 		{
 				loadPrinterQueueItem,
-				new ToolStripMenuItem("salir", null,Close, "OPEN"),
 		});
 	}
-
 
 	public void Show()
 	{
@@ -65,12 +63,4 @@ public class TrayIconPrinter
 			Program.Logger.Error(ex, "TrayIcon error: LoadPrinterQueue: ", ex.Message);
 		}
 	}
-
-	private void Close(object? sender, EventArgs e)
-	{
-		trayIcon.Visible = false;
-		trayIcon.Dispose();
-		Application.Exit();
-	}
-
 }
