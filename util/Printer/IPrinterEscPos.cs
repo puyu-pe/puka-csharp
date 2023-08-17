@@ -1,4 +1,4 @@
-﻿namespace printer_aplication_desktop.utils
+﻿namespace puka.util.printer
 {
     public interface IPrinterEscPos
     {

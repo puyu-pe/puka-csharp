@@ -2,14 +2,22 @@ namespace puka.app;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using printer_aplication_desktop.components;
+using puka.util.printer;
 using SocketIOClient;
 using System.Text.Json;
+
 
 public class PukaClient
 {
 	private readonly SocketIO client;
 	private int forceConnectIntent = 1;
+
+	public delegate void OnAfterPrinting(bool status);
+	OnAfterPrinting onAfterPrinting = (bool _) =>
+	{
+		Program.Logger.Warn("Estado despues de imprimir" + _);
+	};
+
 	public PukaClient(string uri)
 	{
 		client = new SocketIO(new Uri(uri), new SocketIOOptions
@@ -31,6 +39,7 @@ public class PukaClient
 	{
 		if (queue == null)
 			return;
+		bool succesPrinting = true;
 		Program.Logger.Info($"Se recibe {queue.Count} elementos a imprimir");
 		foreach (KeyValuePair<string, JsonElement> kvp in queue)
 		{
@@ -62,9 +71,20 @@ public class PukaClient
 			catch (Exception e)
 			{
 				Program.Logger.Warn(e, e.Message);
+				succesPrinting = false;
 			}
-
 		}
+		onAfterPrinting(succesPrinting);
+	}
+
+	public void SetOnAfterPrinting(OnAfterPrinting onAfterPrinting)
+	{
+		this.onAfterPrinting = onAfterPrinting;
+	}
+
+	public async Task RequestToLoadPrintQueue()
+	{
+		await client.EmitAsync("printer:start");
 	}
 
 	private bool TryConvertObjectFromJson<Type>(JToken json, out Type? obj)
@@ -124,7 +144,7 @@ public class PukaClient
 
 	private async void OnReconnected(object? sender, int intent)
 	{
-		await client.EmitAsync("printer:start");
+		await RequestToLoadPrintQueue();
 		Program.Logger.Info("Se Recupero conexión con el servidor intento: {0}", intent);
 	}
 

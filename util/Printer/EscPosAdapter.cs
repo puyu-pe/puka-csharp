@@ -1,11 +1,10 @@
 ﻿using ESCPOS_NET;
 using ESCPOS_NET.Emitters;
 using ESCPOS_NET.Utilities;
-using printer_aplication_desktop.utils;
 using System.Globalization;
 using System.Text;
 
-namespace printer_aplication_desktop.components
+namespace puka.util.printer
 {
 	public class EscPosAdapter : IPrinterEscPos
 	{

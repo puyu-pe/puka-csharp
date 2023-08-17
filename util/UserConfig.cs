@@ -5,7 +5,7 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace puka;
+namespace puka.util;
 
 public class UserConfig
 {

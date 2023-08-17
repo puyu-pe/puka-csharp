@@ -1,4 +1,4 @@
-﻿namespace printer_aplication_desktop.components
+﻿namespace puka.util.printer 
 {
     public enum TypeConnectionPrinter
     {

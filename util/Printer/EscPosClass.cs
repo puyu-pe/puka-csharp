@@ -1,10 +1,9 @@
 ﻿using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
-using printer_aplication_desktop.utils;
 using puka;
 
 
-namespace printer_aplication_desktop.components
+namespace puka.util.printer 
 {
 	public class EscPosClass
 	{
