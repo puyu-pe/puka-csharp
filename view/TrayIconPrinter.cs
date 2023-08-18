@@ -47,7 +47,7 @@ public class TrayIconPrinter
 
 	private void NotifyUserOnFailedToPrint()
 	{
-		string message = "Revise conexión con la impresora";
+		string message = "Revise conexión con la impresora, posiblemente este desconectada";
 		trayIcon.ShowBalloonTip(2000, "Algunos tickets no se imprimieron", message, ToolTipIcon.Warning);
 	}
 

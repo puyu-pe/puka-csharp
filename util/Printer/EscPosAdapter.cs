@@ -1,5 +1,6 @@
 ﻿using ESCPOS_NET;
 using ESCPOS_NET.Emitters;
+using ESCPOS_NET.Printers;
 using ESCPOS_NET.Utilities;
 using System.Globalization;
 using System.Text;
@@ -48,6 +49,23 @@ namespace puka.util.printer
 				case TypeConnectionPrinter.Samba:
 					printer = new SambaPrinter(hostname.ToString(), port.ToString());
 					break;
+				case TypeConnectionPrinter.WindowsUsb:
+					{
+						List<DeviceDetails> usbDevices = DeviceFinder.GetDevices();//gets the usb devices connected to the pc
+						string? name_system = hostname.ToString()?.Replace(" ", "");
+						DeviceDetails? targetDevice = usbDevices.Find((item) =>
+						{
+							string? displayName = item.DisplayName?.Replace(" ", "");
+							return displayName == name_system;
+						});
+						if (targetDevice == null)
+							throw new Exception($"Impresora USB ${name_system}, no encontrada");
+						string? usbPort = targetDevice.DevicePath;
+						if (usbPort == null)
+							throw new Exception($"No se encontro un DevicePath: {targetDevice.DisplayName}");
+						printer = new USBPrinter(usbPort);
+						break;
+					}
 				default:
 					throw new ArgumentException("Tipo de impresora no válido.");
 			}
@@ -87,6 +105,7 @@ namespace puka.util.printer
 				if (printer is BasePrinter basePrinter)
 				{
 					basePrinter.Write(CombinePrinterParameter(dataPrintElement));
+					Thread.Sleep(500); // Importante, hasta que se libere la impresora
 					basePrinter.Dispose();
 				}
 			}

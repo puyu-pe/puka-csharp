@@ -5,6 +5,7 @@
         ImmediateNetwork,
         Serial,
         File,
-        Samba
+        Samba,
+				WindowsUsb
     }
 }

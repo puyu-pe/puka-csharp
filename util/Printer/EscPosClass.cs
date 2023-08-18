@@ -62,6 +62,9 @@ namespace puka.util.printer
 					case "samba":
 						connectorPrinter = new EscPosAdapter(printer.name_system, printer.port, TypeConnectionPrinter.Samba);
 						break;
+					case "windows-usb":
+						connectorPrinter = new EscPosAdapter(printer.name_system, printer.port, TypeConnectionPrinter.WindowsUsb);
+						break;
 					default:
 						throw new Exception("Tipo de impresora no soportado");
 				}
@@ -69,6 +72,7 @@ namespace puka.util.printer
 			catch (Exception ex)
 			{
 				Program.Logger.Warn(ex, "Error en ConnectTypePrinter", ex.Message);
+				throw;
 			}
 		}
 
