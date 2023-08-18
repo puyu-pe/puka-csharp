@@ -1,267 +1,264 @@
 ﻿using ESCPOS_NET;
 using ESCPOS_NET.Emitters;
+using ESCPOS_NET.Printers;
 using ESCPOS_NET.Utilities;
-using printer_aplication_desktop.utils;
-using System;
-using System.Collections.Generic;
-using System.IO;
+using System.Globalization;
 using System.Text;
-using System.Text.RegularExpressions;
 
-namespace printer_aplication_desktop.components
+namespace puka.util.printer
 {
-    public class EscPosAdapter : IPrinterEscPos
-    {
-        private ListTypeConexion typeConexion;
-        private EPSON elementDataPrinter;
-        private object printer;
-        private object hostname;
-        private object port;
-        private Dictionary<char, char> characterMap;
+	public class EscPosAdapter : IPrinterEscPos
+	{
+		private EPSON epsonPrinter;
+		private object? printer;
 
-        public EscPosAdapter(object hostname, object port, ListTypeConexion typeConexion)
-        {
-            elementDataPrinter = new EPSON();
-            this.hostname = hostname;
-            this.port = port;
-            this.typeConexion = typeConexion;
-            Conexion();
-            SpecialCharacterToLetterReplacer();
-        }
+		public EscPosAdapter(object hostname, object port, TypeConnectionPrinter typeConnectionPrinter)
+		{
+			epsonPrinter = new EPSON();
+			ConnectionPrinter(hostname, port, typeConnectionPrinter);
+		}
 
-        private void SpecialCharacterToLetterReplacer()
-        {
-            characterMap = new Dictionary<char, char>
-            {
-                { 'á', 'a' }, { 'Á', 'A' },
-                { 'à', 'a' }, { 'À', 'A' },
-                { 'â', 'a' }, { 'Â', 'A' },
-                { 'ã', 'a' }, { 'Ã', 'A' },
-                { 'ä', 'a' }, { 'Ä', 'A' },
-                { 'é', 'e' }, { 'É', 'E' },
-                { 'è', 'e' }, { 'È', 'E' },
-                { 'ê', 'e' }, { 'Ê', 'E' },
-                { 'ë', 'e' }, { 'Ë', 'E' },
-                { 'í', 'i' }, { 'Í', 'I' },
-                { 'ì', 'i' }, { 'Ì', 'I' },                
-                { 'î', 'i' }, { 'Î', 'I' },
-                { 'ï', 'i' }, { 'Ï', 'I' },
-                { 'ó', 'o' }, { 'Ó', 'O' },
-                { 'ò', 'o' }, { 'Ò', 'O' },
-                { 'ô', 'o' }, { 'Ô', 'O' },
-                { 'õ', 'o' }, { 'Õ', 'O' },
-                { 'ö', 'o' }, { 'Ö', 'O' },
-                { 'ú', 'u' }, { 'Ú', 'U' },
-                { 'ù', 'u' }, { 'Ù', 'U' },
-                { 'û', 'u' }, { 'Û', 'U' },
-                { 'ü', 'u' }, { 'Ü', 'U' },
-                { 'ñ', 'n' }, { 'Ñ', 'N' },
-            };
-        }
+		private string RemoveDiacritics(string input)
+		{
+			string normalizedString = input.Normalize(NormalizationForm.FormD);
+			string result = new string(normalizedString
+					.Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+					.ToArray());
 
-        private string ReplaceSpecialCharactersWithLetters(string input)
-        {
-            string replacedString = Regex.Replace(input, "[áàâãäéèêëíìîïóòôõöúùûüñÁÀÂÃÄÉÈÊËÍÌÎÏÓÒÔÕÖÚÙÛÜÑ]", m => characterMap[m.Value[0]].ToString(), RegexOptions.IgnoreCase);
+			return result;
+		}
 
-            return replacedString;
-        }
+		private void ConnectionPrinter(object hostname, object port, TypeConnectionPrinter typeConnectionPrinter)
+		{
+			switch (typeConnectionPrinter)
+			{
+				case TypeConnectionPrinter.ImmediateNetwork:
+					printer = new ImmediateNetworkPrinter(new ImmediateNetworkPrinterSettings()
+					{
+						ConnectionString = $"{hostname}:{port}",
+						PrinterName = "PrinterConnector"
+					});
+					break;
+				case TypeConnectionPrinter.Serial:
+					int Bound = Convert.ToInt32(port.ToString());
+					printer = new SerialPrinter(hostname.ToString(), Bound);
+					break;
+				case TypeConnectionPrinter.File:
+					printer = new FilePrinter(hostname.ToString(), true);
+					break;
+				case TypeConnectionPrinter.Samba:
+					printer = new SambaPrinter(hostname.ToString(), port.ToString());
+					break;
+				case TypeConnectionPrinter.WindowsUsb:
+					{
+						List<DeviceDetails> usbDevices = DeviceFinder.GetDevices();//gets the usb devices connected to the pc
+						string? name_system = hostname.ToString()?.Replace(" ", "");
+						DeviceDetails? targetDevice = usbDevices.Find((item) =>
+						{
+							string? displayName = item.DisplayName?.Replace(" ", "");
+							return displayName == name_system;
+						});
+						if (targetDevice == null)
+							throw new Exception($"Impresora USB ${name_system}, no encontrada");
+						string? usbPort = targetDevice.DevicePath;
+						if (usbPort == null)
+							throw new Exception($"No se encontro un DevicePath: {targetDevice.DisplayName}");
+						printer = new USBPrinter(usbPort);
+						break;
+					}
+				default:
+					throw new ArgumentException("Tipo de impresora no válido.");
+			}
+		}
 
-        private void Conexion() 
-        {
-            switch (typeConexion)
-            {
-                case ListTypeConexion.ImmediateNetworkPrinter:
-                    printer = new ImmediateNetworkPrinter(new ImmediateNetworkPrinterSettings()
-                    {
-                        ConnectionString = $"{hostname}:{port}",
-                        PrinterName = "PrinterConnector"
-                    });
-                    break;
-                case ListTypeConexion.SerialPrinter:
-                    int Bound = Convert.ToInt32(port.ToString());
-                    printer = new SerialPrinter(hostname.ToString(), Bound);
-                    break;
-                case ListTypeConexion.FilePrinter:
-                    printer = new FilePrinter(hostname.ToString());
-                    break;
-                case ListTypeConexion.SambaPrinter:
-                    printer = new SambaPrinter(hostname.ToString(), port.ToString());
-                    break;
-                default:
-                    throw new ArgumentException("Tipo de impresora no válido.");
-            }
-        }
+		public async Task<bool> IsPrinterOnline()
+		{
+			try
+			{
+				if (printer is ImmediateNetworkPrinter printerNetwork)
+				{
+					return await printerNetwork.GetOnlineStatus(epsonPrinter);
+				}
+				if (printer is BasePrinter basePrinter)
+				{
+					//basePrinter.GetStatus(), lanza una excepción por defecto, ver la documentación de la libreria
+					//https://github.com/lukevp/ESC-POS-.NET/blob/master/ESCPOS_NET/Printers/BasePrinter.cs
+					return true;
+				}
+			}
+			catch (System.Exception)
+			{
+				return false;
+			}
+			return false;
+		}
 
-        public void Print(byte[] dataPrintElement)
-        {
-            if (printer is ImmediateNetworkPrinter printerNetWork) 
-            {
-                printerNetWork.WriteAsync(CombinePrinterParameter(dataPrintElement));
-            }
+		public async Task Print(byte[] dataPrintElement)
+		{
+			try
+			{
+				if (printer is ImmediateNetworkPrinter printerNetWork)
+				{
+					await printerNetWork.WriteAsync(CombinePrinterParameter(dataPrintElement));
+				}
 
-            if (printer is SerialPrinter printerSerial)
-            {
-                printerSerial.Write(CombinePrinterParameter(dataPrintElement));
-                printerSerial.Dispose();
-            }
+				if (printer is BasePrinter basePrinter)
+				{
+					basePrinter.Write(CombinePrinterParameter(dataPrintElement));
+					Thread.Sleep(500); // Importante, hasta que se libere la impresora
+					basePrinter.Dispose();
+				}
+			}
+			catch (System.Exception ex)
+			{
+				throw new Exception("Excepción en metodo Print(): " + ex.Message);
+			}
+		}
 
-            if (printer is FilePrinter printerFile)
-            {
-                printerFile.Write(CombinePrinterParameter(dataPrintElement));
-                printerFile.Dispose();
-            }
+		public byte[] CombinePrinterParameter(params byte[][] dataPrinter)
+		{
+			byte[] builder = new byte[] { };
 
-            if (printer is SambaPrinter printerSamba)
-            {
-                printerSamba.Write(CombinePrinterParameter(dataPrintElement));
-                printerSamba.Dispose();
-            }
-        }
+			foreach (var byteArray in dataPrinter)
+			{
+				builder = ByteSplicer.Combine(
+						builder,
+						byteArray);
+			}
+			return builder;
+		}
 
-        public byte[] CombinePrinterParameter(params byte[][] dataPrinter)
-        {
-            byte[] builder = null;
+		public byte[] DoubleHeightWeightText()
+		{
+			byte[] elementDouble = CombinePrinterParameter(epsonPrinter.SetStyles(PrintStyle.DoubleHeight | PrintStyle.DoubleWidth));
 
-            foreach (var byteArray in dataPrinter)
-            {
-                builder = ByteSplicer.Combine(
-                    builder,
-                    byteArray);
-            }
-            return builder;
-        }
+			return elementDouble;
+		}
 
-        public byte[] DoubleHeightWeightText()
-        {
-            byte[] elementDouble = CombinePrinterParameter(elementDataPrinter.SetStyles(PrintStyle.DoubleHeight | PrintStyle.DoubleWidth));
+		public byte[] PrintDataLine(string textPrinter)
+		{
+			string textReplaced = RemoveDiacritics(textPrinter);
 
-            return elementDouble;
-        }
+			byte[] elementText = CombinePrinterParameter(epsonPrinter.PrintLine(textReplaced));
 
-        public byte[] PrintDataLine(string textPrinter)
-        {
-            string textReplaced = ReplaceSpecialCharactersWithLetters(textPrinter);
+			return elementText;
+		}
 
-            byte[] elementText = CombinePrinterParameter(elementDataPrinter.PrintLine(textReplaced));
+		public byte[] PrintData(string textPrinter)
+		{
+			string textReplaced = RemoveDiacritics(textPrinter);
 
-            return elementText;
-        }
+			byte[] elementText = CombinePrinterParameter(epsonPrinter.Print(textReplaced));
 
-        public byte[] PrintData(string textPrinter)
-        {
-            string textReplaced = ReplaceSpecialCharactersWithLetters(textPrinter);
+			return elementText;
+		}
 
-            byte[] elementText = CombinePrinterParameter(elementDataPrinter.Print(textReplaced));
+		public byte[] CenterTextPosition()
+		{
+			byte[] elementCenter = CombinePrinterParameter(epsonPrinter.CenterAlign());
 
-            return elementText;
-        }
+			return elementCenter;
+		}
 
-        public byte[] CenterTextPosition()
-        {
-            byte[] elementCenter = CombinePrinterParameter(elementDataPrinter.CenterAlign());
+		public byte[] LeftTextPosition()
+		{
+			byte[] elementLeft = CombinePrinterParameter(epsonPrinter.LeftAlign());
 
-            return elementCenter;
-        }
+			return elementLeft;
+		}
 
-        public byte[] LeftTextPosition()
-        {
-            byte[] elementLeft = CombinePrinterParameter(elementDataPrinter.LeftAlign());
+		public byte[] RightTextPosition()
+		{
+			byte[] elementRight = CombinePrinterParameter(epsonPrinter.RightAlign());
 
-            return elementLeft;
-        }
+			return elementRight;
+		}
 
-        public byte[] RightTextPosition()
-        {
-            byte[] elementRight = CombinePrinterParameter(elementDataPrinter.RightAlign());
+		public byte[] BoldTextFont()
+		{
+			byte[] fontBold = CombinePrinterParameter(epsonPrinter.SetStyles(PrintStyle.Bold));
 
-            return elementRight;
-        }
+			return fontBold;
+		}
 
-        public byte[] BoldTextFont()
-        {
-            byte[] fontBold = CombinePrinterParameter(elementDataPrinter.SetStyles(PrintStyle.Bold));
+		public byte[] FontBTextFont()
+		{
+			byte[] fontB = CombinePrinterParameter(epsonPrinter.SetStyles(PrintStyle.FontB));
 
-            return fontBold;
-        }
+			return fontB;
+		}
 
-        public byte[] FontBTextFont()
-        {
-            byte[] fontB = CombinePrinterParameter(elementDataPrinter.SetStyles(PrintStyle.FontB));
+		public byte[] NoneTextFont()
+		{
+			byte[] fontNone = CombinePrinterParameter(epsonPrinter.SetStyles(PrintStyle.None));
 
-            return fontB;
-        }
+			return fontNone;
+		}
 
-        public byte[] NoneTextFont()
-        {
-            byte[] fontNone = CombinePrinterParameter(elementDataPrinter.SetStyles(PrintStyle.None));
+		public byte[] PrintImageData(string imagePath)
+		{
+			byte[] dataImagePrinter = CombinePrinterParameter(
+									epsonPrinter.PrintImage(File.ReadAllBytes(imagePath), true),
+									PrintDataLine(""));
 
-            return fontNone;
-        }
+			return dataImagePrinter;
+		}
 
-        public byte[] PrintImageData(string imagePath)
-        {
-            byte[] dataImagePrinter = CombinePrinterParameter(
-                        elementDataPrinter.PrintImage(File.ReadAllBytes(imagePath), true),
-                        PrintDataLine(""));
+		public byte[] TextInvertedFont(bool modeText)
+		{
+			byte[] textInvertedPrinter = CombinePrinterParameter(epsonPrinter.ReverseMode(modeText));
 
-            return dataImagePrinter;
-        }
+			return textInvertedPrinter;
+		}
 
-        public byte[] TextInvertedFont(bool modeText)
-        {
-            byte[] textInvertedPrinter = CombinePrinterParameter(elementDataPrinter.ReverseMode(modeText));
+		public byte[] PrintQRCode(string dataQR)
+		{
+			byte[] dataQRPrinter = CombinePrinterParameter(epsonPrinter.PrintQRCode(dataQR));
 
-            return textInvertedPrinter;
-        }
+			return dataQRPrinter;
+		}
 
-        public byte[] PrintQRCode(string dataQR)
-        {
-            byte[] dataQRPrinter = CombinePrinterParameter(elementDataPrinter.PrintQRCode(dataQR));
+		public byte[] PrinterCutWidth(int quantity)
+		{
+			byte[] cutPrinter = CombinePrinterParameter(epsonPrinter.FullCutAfterFeed(quantity));
 
-            return dataQRPrinter;
-        }
+			return cutPrinter;
+		}
 
-        public byte[] PrinterCutWidth(int quantity)
-        {
-            byte[] cutPrinter = CombinePrinterParameter(elementDataPrinter.FullCutAfterFeed(quantity));
+		public string PadBoth(string str, int width, char paddingChar)
+		{
+			int totalPadding = width - str.Length;
+			int leftPadding = totalPadding / 2;
+			int rightPadding = totalPadding - leftPadding;
 
-            return cutPrinter;
-        }
+			if (str.Length > width)
+			{
+				leftPadding = 0;
+				rightPadding = 0;
+			}
 
-        public string PadBoth(string str, int width, char paddingChar)
-        {
-            int totalPadding = width - str.Length;
-            int leftPadding = totalPadding / 2;
-            int rightPadding = totalPadding - leftPadding;
+			string paddedBoth = new string(paddingChar, leftPadding) + str + new string(paddingChar, rightPadding);
 
-            if (str.Length > width) 
-            {
-                leftPadding = 0;
-                rightPadding = 0;
-            }
+			return paddedBoth;
+		}
 
-            string paddedBoth = new string(paddingChar, leftPadding) + str + new string(paddingChar, rightPadding);
+		public string PadRightText(string text, int width, char characterPad)
+		{
+			int totalPadding = width - text.Length;
 
-            return paddedBoth;
-        }
+			string paddedLeft = text + new string(characterPad, totalPadding);
 
-        public string PadRightText(string text, int width, char characterPad)
-        {
-            int totalPadding = width - text.Length;
+			return paddedLeft;
+		}
 
-            string paddedLeft = text + new string(characterPad, totalPadding);
+		public string UFTCharacter(string str)
+		{
+			UTF8Encoding utf8 = new UTF8Encoding();
 
-            return paddedLeft;
-        }
+			Byte[] encodedBytes = utf8.GetBytes(str);
+			String decodedString = utf8.GetString(encodedBytes);
 
-        public string UFTCharacter(string str)
-        {
-            UTF8Encoding utf8 = new UTF8Encoding();
-      
-            Byte[] encodedBytes = utf8.GetBytes(str);
-            String decodedString = utf8.GetString(encodedBytes);
-
-            return decodedString;
-        }
-    }
+			return decodedString;
+		}
+	}
 }

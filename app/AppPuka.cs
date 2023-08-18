@@ -1,6 +1,7 @@
 
 namespace puka.app;
 
+using puka.util;
 using puka.view;
 
 public class AppPuka : ApplicationContext
@@ -27,17 +28,21 @@ public class AppPuka : ApplicationContext
 			DialogResult dialogResult = new PukaForm().ShowDialog();
 			if (dialogResult == DialogResult.OK)
 			{
-				uri = MakeUrlBifrost();
-				new TrayIconPrinter().Show();
-				await new PukaClient(uri).Start();
+				await StartPukaClient();
 			}
 		}
 		else
 		{
-			uri = MakeUrlBifrost();
-			new TrayIconPrinter().Show();
-			await new PukaClient(uri).Start();
+			await StartPukaClient();
 		}
+	}
+
+	private async Task StartPukaClient()
+	{
+		uri = MakeUrlBifrost();
+		PukaClient pukaClient = new(uri);
+		new TrayIconPrinter(pukaClient).Show();
+		await pukaClient.Start();
 	}
 
 	private bool LoadConfigBifrost()
@@ -45,7 +50,8 @@ public class AppPuka : ApplicationContext
 		return BifrostConfig.TrySetSuffix(BifrostConfig.GetSuffix(), out var e_suffix)
 			&& BifrostConfig.TrySetNamespace(BifrostConfig.GetNamespace(), out var e_namespace)
 			&& BifrostConfig.TrySetUrl(BifrostConfig.GetUrl(), out var e_url)
-			&& BifrostConfig.TrySetRuc(BifrostConfig.GetRuc(), out var e_ruc);
+			&& BifrostConfig.TrySetRuc(BifrostConfig.GetRuc(), out var e_ruc)
+			&& File.Exists(UserConfig.GetLogoPath());
 	}
 
 	private string MakeUrlBifrost()

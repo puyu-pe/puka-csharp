@@ -1,5 +1,6 @@
 namespace puka;
 using puka.app;
+using puka.util;
 
 
 static internal class Program
@@ -24,7 +25,7 @@ static internal class Program
 		}
 		catch (Exception e)
 		{
-			Logger.Fatal(e, "ocurrio un error al iniciar el programa: {0} no se pudo conectar", e.Message );
+			Logger.Fatal(e, "ocurrio un error al iniciar el programa: {0} no se pudo conectar", e.Message);
 			Application.Exit();
 		}
 	}

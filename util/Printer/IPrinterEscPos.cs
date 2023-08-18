@@ -1,8 +1,10 @@
-﻿namespace printer_aplication_desktop.utils
+﻿namespace puka.util.printer
 {
     public interface IPrinterEscPos
     {
-        void Print(byte[] dataPrintElement);
+        Task Print(byte[] dataPrintElement);
+
+				Task<bool> IsPrinterOnline();
 
         byte[] DoubleHeightWeightText();
 

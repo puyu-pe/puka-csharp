@@ -1,6 +1,6 @@
 using NLog;
 
-namespace puka;
+namespace puka.util;
 
 static class ConfigLogger
 {

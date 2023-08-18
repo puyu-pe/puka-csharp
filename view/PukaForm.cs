@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using puka.app;
+﻿using puka.app;
+using puka.util;
 
 namespace puka.view
 {
@@ -33,8 +25,9 @@ namespace puka.view
 			{
 				textNamespace.Text = BifrostConfig.GetNamespace();
 			}
-			string? logoPath = UserConfig.Get("logo-path");
-			if(!string.IsNullOrEmpty(logoPath)){
+			string? logoPath = UserConfig.GetLogoPath();
+			if (!string.IsNullOrEmpty(logoPath))
+			{
 				setImagePicture(logoPath);
 			}
 		}
@@ -48,17 +41,16 @@ namespace puka.view
 
 			if (openFileDialog.ShowDialog() == DialogResult.OK)
 			{
-				string userFolderPath = UserConfig.getPukaFolderPath();
+				string userFolderPath = UserConfig.GetPukaFolderPath();
 				string logoFileSourcePath = openFileDialog.FileName;
 				string logoFileDestinyPath = Path.Combine(userFolderPath, "logo_empresa" + Path.GetExtension(logoFileSourcePath));
-				logoImagePathSnapshot = logoFileDestinyPath;
 
 				if (File.Exists(logoFileDestinyPath))
 				{
 					File.Delete(logoFileDestinyPath);
 				}
 				File.Copy(logoFileSourcePath, logoFileDestinyPath);
-				setImagePicture(logoFileSourcePath);
+				setImagePicture(logoFileDestinyPath);
 			}
 		}
 
@@ -70,11 +62,12 @@ namespace puka.view
 				{
 					pictureLogo.SizeMode = PictureBoxSizeMode.Zoom;
 					pictureLogo.Image = new Bitmap(selectedImage, pictureLogo.Width, pictureLogo.Height);
+					logoImagePathSnapshot = pathImage;
 				}
 			}
 			catch (System.Exception e)
 			{
-				Program.Logger.Debug(e,"No se pudo guardar el logo: " + e.Message);
+				Program.Logger.Debug(e, "No se pudo guardar el logo: " + e.Message);
 			}
 		}
 
@@ -108,7 +101,18 @@ namespace puka.view
 			{
 				errors.AddRange(e_namespace);
 			}
-			UserConfig.Set("logo-path", logoImagePathSnapshot);
+			if (logoImagePathSnapshot.Length == 0)
+			{
+				errors.Add("Falta seleccionar el logo de la empresa");
+			}
+			else
+			{
+				UserConfig.Set("logo-path", logoImagePathSnapshot);
+			}
+			if (!File.Exists(UserConfig.GetLogoPath()))
+			{
+				errors.Add("El logo de la empresa no se configuro correctamente");
+			}
 
 			if (errors.Count > 0)
 			{
