@@ -20,6 +20,14 @@ public static class BifrostConfig
 		{
 			errors.Add("La url no tiene un valor valido correcto");
 		}
+		try
+		{
+			new Uri(url);
+		}
+		catch (System.Exception)
+		{
+			errors.Add("La url no cumple con la forma de una url");
+		}
 		bool existErrors = errors.Count() > 0;
 		if (!existErrors)
 		{
