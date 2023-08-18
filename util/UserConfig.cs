@@ -15,16 +15,23 @@ public class UserConfig
 	public static void Load()
 	{
 		string appFolder = GetPukaFolderPath();
-
 		configFilePath = Path.Combine(appFolder, "puka.ini");
-		if (!File.Exists(configFilePath))
-			File.WriteAllText(configFilePath, "<configuration></configuration>");
-
-		ExeConfigurationFileMap configFileMap = new()
+		try
 		{
-			ExeConfigFilename = configFilePath
-		};
-		config = ConfigurationManager.OpenMappedExeConfiguration(configFileMap, ConfigurationUserLevel.None);
+			if (!File.Exists(configFilePath))
+				File.WriteAllText(configFilePath, "<configuration></configuration>");
+
+			ExeConfigurationFileMap configFileMap = new()
+			{
+				ExeConfigFilename = configFilePath
+			};
+			config = ConfigurationManager.OpenMappedExeConfiguration(configFileMap, ConfigurationUserLevel.None);
+		}
+		catch (System.Exception ex)
+		{
+			File.WriteAllText(configFilePath, "<configuration></configuration>");
+			Program.Logger.Error(ex,"Error al cargar la configuración de  usuario");
+		}
 	}
 
 	public static string GetPukaFolderPath()
@@ -35,7 +42,8 @@ public class UserConfig
 		return appFolder;
 	}
 
-	public static string GetLogoPath(){
+	public static string GetLogoPath()
+	{
 		return Get("logo-path") ?? "";
 	}
 
@@ -57,9 +65,12 @@ public class UserConfig
 		}
 	}
 
-	public static void Set(string key, string value){
-		try{
-			if(config == null){
+	public static void Set(string key, string value)
+	{
+		try
+		{
+			if (config == null)
+			{
 				Program.Logger.Warn("No se ha cargado el archivo de configuraciones, UserConfig.Load()");
 				return;
 			}
@@ -67,7 +78,8 @@ public class UserConfig
 			config.AppSettings.Settings.Add(key, value);
 			config.Save(ConfigurationSaveMode.Modified);
 		}
-		catch{
+		catch
+		{
 
 		}
 	}

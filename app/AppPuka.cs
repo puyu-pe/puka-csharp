@@ -1,6 +1,7 @@
 
 namespace puka.app;
 
+using puka.util;
 using puka.view;
 
 public class AppPuka : ApplicationContext
@@ -49,7 +50,8 @@ public class AppPuka : ApplicationContext
 		return BifrostConfig.TrySetSuffix(BifrostConfig.GetSuffix(), out var e_suffix)
 			&& BifrostConfig.TrySetNamespace(BifrostConfig.GetNamespace(), out var e_namespace)
 			&& BifrostConfig.TrySetUrl(BifrostConfig.GetUrl(), out var e_url)
-			&& BifrostConfig.TrySetRuc(BifrostConfig.GetRuc(), out var e_ruc);
+			&& BifrostConfig.TrySetRuc(BifrostConfig.GetRuc(), out var e_ruc)
+			&& File.Exists(UserConfig.GetLogoPath());
 	}
 
 	private string MakeUrlBifrost()
