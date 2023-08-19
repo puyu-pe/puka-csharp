@@ -28,6 +28,7 @@
     /// </summary>
     private void InitializeComponent()
     {
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PukaForm));
       containerLayout = new TableLayoutPanel();
       headerLayout = new TableLayoutPanel();
       pictureLogo = new PictureBox();
@@ -317,6 +318,7 @@
       ClientSize = new Size(604, 653);
       Controls.Add(containerLayout);
       DoubleBuffered = true;
+      Icon = (Icon)resources.GetObject("$this.Icon");
       Name = "PukaForm";
       Text = "Configuración PUKA-YURES";
       TopMost = true;

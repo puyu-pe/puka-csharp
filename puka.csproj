@@ -6,7 +6,14 @@
 		<Nullable>enable</Nullable>
 		<UseWindowsForms>true</UseWindowsForms>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<StartupObject>puka.Program</StartupObject>
+		<ApplicationIcon>assets\icono.ico</ApplicationIcon>
+		<PlatformTarget>x86</PlatformTarget>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <Content Include="assets\icono.ico" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="ESCPOS_NET" Version="3.0.0" />
