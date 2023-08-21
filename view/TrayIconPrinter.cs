@@ -1,5 +1,4 @@
 using puka.app;
-using puka.util;
 
 namespace puka;
 
@@ -22,6 +21,9 @@ public class TrayIconPrinter
 		};
 
 		this.pukaClient.SetOnAfterPrinting(OnAfterPrinting);
+		this.pukaClient.SetOnErrorDetected(OnErrorDetectedOnPukaClient);
+		this.pukaClient.SetOnReconnectAttemptBifrost(OnReconnectAttemptBifrost);
+		this.pukaClient.SetOnconnectedSuccess(OnConnectedSuccessBifrost);
 
 
 		trayIcon.ContextMenuStrip.Items.AddRange(new ToolStripItem[]
@@ -43,6 +45,23 @@ public class TrayIconPrinter
 			NotifyUserOnFailedToPrint();
 		}
 		loadPrinterQueueItem.Enabled = !successPrint;
+	}
+
+	private void OnErrorDetectedOnPukaClient(string message)
+	{
+		trayIcon.ShowBalloonTip(2000, "Se detecto un error en el cliente",message, ToolTipIcon.Error);
+	}
+
+	private void OnReconnectAttemptBifrost(int intent)
+	{
+		if(intent == 1 || intent % 2 == 0){
+			trayIcon.ShowBalloonTip(3000, "No hay conexión con el servidor","Puede deberse a una mala conexión a internet, o el servidor a caido.", ToolTipIcon.Error);
+		}
+	}
+
+	private void OnConnectedSuccessBifrost()
+	{
+		trayIcon.ShowBalloonTip(2000, "Conexión exitosa al servidor","Se logro establecer una conexión exitosa al servidor", ToolTipIcon.Info);
 	}
 
 	private void NotifyUserOnFailedToPrint()

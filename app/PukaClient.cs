@@ -12,6 +12,25 @@ public class PukaClient
 	private readonly SocketIO client;
 	private int forceConnectIntent = 1;
 
+	public delegate void OnErrorDetected(string error);
+	OnErrorDetected onErrorDetected = (string message) =>
+	{
+		Program.Logger.Error("Ocurrio un error: ", message);
+	};
+
+
+	public delegate void OnReconnectAttemptBifrost(int intent);
+	OnReconnectAttemptBifrost onReconnectAttemptBifrost = (int intent) =>
+	{
+		Program.Logger.Warn($"Tratando de reconectarse a bifrost intento numero ${intent}");
+	};
+
+	public delegate void OnConnectedSuccess();
+	OnConnectedSuccess onConnectedSuccess = () =>
+	{
+		Program.Logger.Info("Conexión exitosa a bifrost");
+	};
+
 	public delegate void OnAfterPrinting(bool status);
 	OnAfterPrinting onAfterPrinting = (bool _) =>
 	{
@@ -77,6 +96,21 @@ public class PukaClient
 		onAfterPrinting(succesPrinting);
 	}
 
+	public void SetOnErrorDetected(OnErrorDetected onErrorDetected)
+	{
+		this.onErrorDetected = onErrorDetected;
+	}
+
+	public void SetOnReconnectAttemptBifrost(OnReconnectAttemptBifrost onReconnectAttemptBifrost)
+	{
+		this.onReconnectAttemptBifrost = onReconnectAttemptBifrost;
+	}
+
+	public void SetOnconnectedSuccess(OnConnectedSuccess onConnectedSuccess)
+	{
+		this.onConnectedSuccess = onConnectedSuccess;
+	}
+
 	public void SetOnAfterPrinting(OnAfterPrinting onAfterPrinting)
 	{
 		this.onAfterPrinting = onAfterPrinting;
@@ -116,7 +150,7 @@ public class PukaClient
 
 	private async void OnConnected(object? sender, EventArgs e)
 	{
-
+		onConnectedSuccess();
 		Program.Logger.Info("Conexión a {0}", client.ServerUri.AbsoluteUri);
 		await client.EmitAsync("printer:start");
 	}
@@ -132,6 +166,7 @@ public class PukaClient
 		}
 		else
 		{
+			onErrorDetected(e);
 			Program.Logger.Error("No se pudo conectar a {0}", client.ServerUri.AbsoluteUri);
 			Application.Exit();
 		}
@@ -140,6 +175,7 @@ public class PukaClient
 	private void OnReconnectAttempt(object? sender, int intent)
 	{
 		Program.Logger.Info("Reintentando conexión con el servidor intento: {0}", intent);
+		onReconnectAttemptBifrost(intent);
 	}
 
 	private async void OnReconnected(object? sender, int intent)
