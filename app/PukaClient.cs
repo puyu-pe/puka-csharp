@@ -83,8 +83,12 @@ public class PukaClient
 					continue;
 				}
 
-				var tickets = dataToPrintObject[0];
-				await new EscPosClass(tickets).PrinterDocument();
+				foreach (var ticket in dataToPrintObject)
+				{
+					Program.Logger.Debug(ticket);
+					await new EscPosClass(ticket).PrinterDocument();
+				}
+
 				await client.EmitAsync("printer:printed", new BifrostDeleteRequest { Key = kvp.Key });
 			}
 			catch (Exception e)
