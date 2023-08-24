@@ -38,7 +38,7 @@
 
         string PadRightText(string text, int width, char characterPad);
 
-        string UFTCharacter(string str);
+        byte[] EncodingLatin2();
 
     }
 }

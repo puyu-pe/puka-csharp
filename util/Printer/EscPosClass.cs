@@ -88,6 +88,7 @@ namespace puka.util.printer
 				{
 					case "invoice":
 						result = connectorPrinter.CombinePrinterParameter(
+								connectorPrinter.EncodingLatin2(),
 								result,
 								BusinessAdditional(),
 								DocumentLegal(),
@@ -103,6 +104,7 @@ namespace puka.util.printer
 
 					case "note":
 						result = connectorPrinter.CombinePrinterParameter(
+								connectorPrinter.EncodingLatin2(),
 								result,
 								DocumentLegal(),
 								Customer(),
@@ -112,6 +114,7 @@ namespace puka.util.printer
 
 					case "command":
 						result = connectorPrinter.CombinePrinterParameter(
+								connectorPrinter.EncodingLatin2(),
 								result,
 								ProductionArea(),
 								TextBackgroundInverted(),
@@ -123,6 +126,7 @@ namespace puka.util.printer
 
 					case "precount":
 						result = connectorPrinter.CombinePrinterParameter(
+								connectorPrinter.EncodingLatin2(),
 								result,
 								DocumentLegal(),
 								Additional(),
@@ -133,6 +137,7 @@ namespace puka.util.printer
 
 					case "extra":
 						result = connectorPrinter.CombinePrinterParameter(
+								connectorPrinter.EncodingLatin2(),
 								result,
 								TitleExtra(),
 								Additional(),

@@ -85,7 +85,6 @@ public class PukaClient
 
 				foreach (var ticket in dataToPrintObject)
 				{
-					Program.Logger.Debug(ticket);
 					await new EscPosClass(ticket).PrinterDocument();
 				}
 

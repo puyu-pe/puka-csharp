@@ -4,6 +4,8 @@ using ESCPOS_NET.Printers;
 using ESCPOS_NET.Utilities;
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
+
 
 namespace puka.util.printer
 {
@@ -16,16 +18,6 @@ namespace puka.util.printer
 		{
 			epsonPrinter = new EPSON();
 			ConnectionPrinter(hostname, port, typeConnectionPrinter);
-		}
-
-		private string RemoveDiacritics(string input)
-		{
-			string normalizedString = input.Normalize(NormalizationForm.FormD);
-			string result = new string(normalizedString
-					.Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
-					.ToArray());
-
-			return result;
 		}
 
 		private void ConnectionPrinter(object hostname, object port, TypeConnectionPrinter typeConnectionPrinter)
@@ -131,24 +123,21 @@ namespace puka.util.printer
 		public byte[] DoubleHeightWeightText()
 		{
 			byte[] elementDouble = CombinePrinterParameter(epsonPrinter.SetStyles(PrintStyle.DoubleHeight | PrintStyle.DoubleWidth));
-
 			return elementDouble;
 		}
 
 		public byte[] PrintDataLine(string textPrinter)
 		{
-			string textReplaced = RemoveDiacritics(textPrinter);
 
-			byte[] elementText = CombinePrinterParameter(epsonPrinter.PrintLine(textReplaced));
+			byte[] elementText = CombinePrinterParameter(epsonPrinter.PrintLine(textPrinter));
 
 			return elementText;
 		}
 
 		public byte[] PrintData(string textPrinter)
 		{
-			string textReplaced = RemoveDiacritics(textPrinter);
 
-			byte[] elementText = CombinePrinterParameter(epsonPrinter.Print(textReplaced));
+			byte[] elementText = CombinePrinterParameter(epsonPrinter.Print(textPrinter));
 
 			return elementText;
 		}
@@ -251,14 +240,9 @@ namespace puka.util.printer
 			return paddedLeft;
 		}
 
-		public string UFTCharacter(string str)
+		public byte[] EncodingLatin2()
 		{
-			UTF8Encoding utf8 = new UTF8Encoding();
-
-			Byte[] encodedBytes = utf8.GetBytes(str);
-			String decodedString = utf8.GetString(encodedBytes);
-
-			return decodedString;
+			return epsonPrinter.CodePage(CodePage.WPC1250_LATIN2);
 		}
 	}
 }
