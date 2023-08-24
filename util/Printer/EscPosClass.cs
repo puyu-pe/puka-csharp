@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using puka;
 
 
-namespace puka.util.printer 
+namespace puka.util.printer
 {
 	public class EscPosClass
 	{
@@ -581,7 +581,11 @@ namespace puka.util.printer
 
 			result = connectorPrinter.CombinePrinterParameter(
 					result,
+					connectorPrinter.BoldTextFont(),
+					connectorPrinter.DoubleHeightWeightText(),
 					connectorPrinter.PrintDataLine(data.titleExtra.title.ToString()),
+					connectorPrinter.CenterTextPosition(),
+					connectorPrinter.NoneTextFont(),
 					connectorPrinter.PrintDataLine(data.titleExtra.subtitle.ToString()));
 
 			return result;
