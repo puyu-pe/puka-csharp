@@ -1,4 +1,5 @@
 using puka.app;
+using puka.util;
 
 namespace puka;
 
@@ -29,6 +30,7 @@ public class TrayIconPrinter
 		trayIcon.ContextMenuStrip.Items.AddRange(new ToolStripItem[]
 		{
 				loadPrinterQueueItem,
+				new ToolStripMenuItem("Cambiar logo",null,ChangeCompanyLogo,"CHANGE-LOGO")
 		});
 	}
 
@@ -49,19 +51,20 @@ public class TrayIconPrinter
 
 	private void OnErrorDetectedOnPukaClient(string message)
 	{
-		trayIcon.ShowBalloonTip(2000, "Se detecto un error en el cliente",message, ToolTipIcon.Error);
+		trayIcon.ShowBalloonTip(2000, "Se detecto un error en el cliente", message, ToolTipIcon.Error);
 	}
 
 	private void OnReconnectAttemptBifrost(int intent)
 	{
-		if(intent == 1 || intent % 2 == 0){
-			trayIcon.ShowBalloonTip(3000, "No hay conexión con el servidor","Puede deberse a una mala conexión a internet, o el servidor a caido.", ToolTipIcon.Error);
+		if (intent == 1 || intent % 2 == 0)
+		{
+			trayIcon.ShowBalloonTip(3000, "No hay conexión con el servidor", "Puede deberse a una mala conexión a internet, o el servidor a caido.", ToolTipIcon.Error);
 		}
 	}
 
 	private void OnConnectedSuccessBifrost()
 	{
-		trayIcon.ShowBalloonTip(2000, "Conexión exitosa al servidor","Se logro establecer una conexión exitosa al servidor", ToolTipIcon.Info);
+		trayIcon.ShowBalloonTip(2000, "Conexión exitosa al servidor", "Se logro establecer una conexión exitosa al servidor", ToolTipIcon.Info);
 	}
 
 	private void NotifyUserOnFailedToPrint()
@@ -80,6 +83,35 @@ public class TrayIconPrinter
 		catch (System.Exception ex)
 		{
 			Program.Logger.Error(ex, "TrayIcon error: LoadPrinterQueue: ", ex.Message);
+		}
+	}
+
+	private void ChangeCompanyLogo(object? sender, EventArgs e)
+	{
+		OpenFileDialog openFileDialog = new()
+		{
+			Filter = "Archivos de imagen|*.png;*.jpg;*.jpeg|Archivos PNG (*.png)|*.png|Archivos JPG (*.jpg, *.jpeg)|*.jpg;*.jpeg"
+		};
+		if (openFileDialog.ShowDialog() == DialogResult.OK)
+		{
+			string userFolderPath = UserConfig.GetPukaFolderPath();
+			string logoFileSourcePath = openFileDialog.FileName;
+			string logoFileDestinyPath = Path.Combine(userFolderPath, "logo_empresa" + Path.GetExtension(logoFileSourcePath));
+
+			if (File.Exists(logoFileDestinyPath))
+			{
+				File.Delete(logoFileDestinyPath);
+			}
+			File.Copy(logoFileSourcePath, logoFileDestinyPath);
+			UserConfig.Set("logo-path", logoFileDestinyPath);
+			if (File.Exists(UserConfig.GetLogoPath()))
+			{
+				trayIcon.ShowBalloonTip(2000, "Se cambio el logo", "se modifico el logo exitosamente", ToolTipIcon.Info);
+			}
+			else
+			{
+				trayIcon.ShowBalloonTip(2000, "No se pudo cambiar el logo", "Solo se permiten imagenes .png, .jpg y .jpeg", ToolTipIcon.Info);
+			}
 		}
 	}
 }
