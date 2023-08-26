@@ -153,6 +153,7 @@ namespace puka.util.printer
 			catch (Exception ex)
 			{
 				Program.Logger.Warn(ex, "Ocurrio una excepcion en PrintLayout ", ex.Message);
+				throw;
 			}
 			return result;
 		}

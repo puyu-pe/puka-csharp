@@ -18,6 +18,13 @@ public class PukaClient
 		Program.Logger.Error("Ocurrio un error: ", message);
 	};
 
+	public delegate void OnFailedToPrint(string details);
+
+	OnFailedToPrint onFailedToPrint = (string details) =>
+	{
+		Program.Logger.Warn("Error al imprimir un ticket: " + details);
+	};
+
 
 	public delegate void OnReconnectAttemptBifrost(int intent);
 	OnReconnectAttemptBifrost onReconnectAttemptBifrost = (int intent) =>
@@ -31,11 +38,20 @@ public class PukaClient
 		Program.Logger.Info("Conexión exitosa a bifrost");
 	};
 
-	public delegate void OnAfterPrinting(bool status);
-	OnAfterPrinting onAfterPrinting = (bool _) =>
+	public delegate void OnChangeNumberItemsQueue(int numberItemsQueue);
+
+	OnChangeNumberItemsQueue onChangeNumberItemsQueue = (int numberItemsQueue) =>
 	{
-		Program.Logger.Warn("Estado despues de imprimir" + _);
+		Program.Logger.Info("Elementos en cola: " + numberItemsQueue);
 	};
+
+	public delegate void OnChangePrintTicketsEnabled(bool enabled);
+
+	OnChangePrintTicketsEnabled onChangePrintTicketsEnabled = (bool enabled) =>
+	{
+		Program.Logger.Info("falta implementar evento onChangePrintTicketsEnabled");
+	};
+
 
 	public PukaClient(string uri)
 	{
@@ -47,6 +63,7 @@ public class PukaClient
 
 		client.On("printer:load-queue", OnLoadQueue);
 		client.On("printer:to-print", OnToPrint);
+		client.On("printer:number-items-queue", OnNumberItemsQueue);
 		client.OnConnected += OnConnected;
 		client.OnError += OnError;
 		client.OnReconnectAttempt += OnReconnectAttempt;
@@ -58,8 +75,8 @@ public class PukaClient
 	{
 		if (queue == null)
 			return;
-		bool succesPrinting = true;
 		Program.Logger.Info($"Se recibe {queue.Count} elementos a imprimir");
+		onChangePrintTicketsEnabled(false);
 		foreach (KeyValuePair<string, JsonElement> kvp in queue)
 		{
 			try
@@ -93,10 +110,10 @@ public class PukaClient
 			catch (Exception e)
 			{
 				Program.Logger.Warn(e, e.Message);
-				succesPrinting = false;
+				onFailedToPrint(e.Message);
 			}
 		}
-		onAfterPrinting(succesPrinting);
+		onChangePrintTicketsEnabled(true);
 	}
 
 	public void SetOnErrorDetected(OnErrorDetected onErrorDetected)
@@ -114,14 +131,28 @@ public class PukaClient
 		this.onConnectedSuccess = onConnectedSuccess;
 	}
 
-	public void SetOnAfterPrinting(OnAfterPrinting onAfterPrinting)
+	public void SetOnChangeNumberItemsQueue(OnChangeNumberItemsQueue onChangeNumberItemsQueue)
 	{
-		this.onAfterPrinting = onAfterPrinting;
+		this.onChangeNumberItemsQueue = onChangeNumberItemsQueue;
+	}
+
+	public void SetOnFailedToPrint(OnFailedToPrint onFailedToPrint)
+	{
+		this.onFailedToPrint = onFailedToPrint;
+	}
+
+	public void SetOnChangePrintTicketsEnabled(OnChangePrintTicketsEnabled onChangePrintTicketsEnabled)
+	{
+		this.onChangePrintTicketsEnabled = onChangePrintTicketsEnabled;
 	}
 
 	public async Task RequestToLoadPrintQueue()
 	{
 		await client.EmitAsync("printer:start");
+	}
+
+	public async Task RequestToReleaseQueue(){
+		await client.EmitAsync("printer:release-queue");
 	}
 
 	private bool TryConvertObjectFromJson<Type>(JToken json, out Type? obj)
@@ -151,6 +182,11 @@ public class PukaClient
 		await PrintTickets(bifrostResponse.Data);
 	}
 
+	private void OnNumberItemsQueue(SocketIOResponse response)
+	{
+		int numberItemsQueue = response.GetValue<int>();
+		onChangeNumberItemsQueue(numberItemsQueue);
+	}
 	private async void OnConnected(object? sender, EventArgs e)
 	{
 		onConnectedSuccess();

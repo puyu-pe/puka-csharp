@@ -7,12 +7,18 @@ public class TrayIconPrinter
 {
 	private readonly NotifyIcon trayIcon;
 	private readonly PukaClient pukaClient;
-	private ToolStripItem loadPrinterQueueItem;
+
+	private ToolStripMenuItem actionsPrintQueue;
+
+	private int numberItemsQueueSnapshot = 0;
 
 	public TrayIconPrinter(PukaClient pukaClient)
 	{
-		loadPrinterQueueItem = new ToolStripMenuItem("Cargar cola de impresión", null, LoadPrinterQueue, "LOAD-QUEUE");
 		this.pukaClient = pukaClient;
+		actionsPrintQueue = new ToolStripMenuItem("Cola de impresión: 0", null, ActionsPrintQueue, "ACTIONS-PRINT-QUEUE")
+		{
+			Enabled = false
+		};
 		trayIcon = new NotifyIcon()
 		{
 			Text = "PUKA - YURES",
@@ -21,7 +27,15 @@ public class TrayIconPrinter
 			Visible = true,
 		};
 
-		this.pukaClient.SetOnAfterPrinting(OnAfterPrinting);
+		actionsPrintQueue.DropDownItems.AddRange(new ToolStripItem[]{
+			new ToolStripMenuItem("ELIMINAR",null,ReleasePrinterQueue,"RELEASE-QUEUE"),
+			new ToolStripMenuItem("IMPRIMIR",null,LoadPrinterQueue,"LOAD-QUEUE")
+		});
+
+
+		this.pukaClient.SetOnChangePrintTicketsEnabled(OnChangePrintTicketsEnabled);
+		this.pukaClient.SetOnFailedToPrint(OnFailedToPrint);
+		this.pukaClient.SetOnChangeNumberItemsQueue(OnChangeNumberItemsQueue);
 		this.pukaClient.SetOnErrorDetected(OnErrorDetectedOnPukaClient);
 		this.pukaClient.SetOnReconnectAttemptBifrost(OnReconnectAttemptBifrost);
 		this.pukaClient.SetOnconnectedSuccess(OnConnectedSuccessBifrost);
@@ -29,24 +43,14 @@ public class TrayIconPrinter
 
 		trayIcon.ContextMenuStrip.Items.AddRange(new ToolStripItem[]
 		{
-				loadPrinterQueueItem,
-				new ToolStripMenuItem("Cambiar logo",null,ChangeCompanyLogo,"CHANGE-LOGO")
+			actionsPrintQueue,
+			new ToolStripMenuItem("Cambiar logo",null,ChangeCompanyLogo,"CHANGE-LOGO")
 		});
 	}
 
 	public void Show()
 	{
 		trayIcon.Visible = true;
-		loadPrinterQueueItem.Enabled = false;
-	}
-
-	private void OnAfterPrinting(bool successPrint)
-	{
-		if (!successPrint)
-		{
-			NotifyUserOnFailedToPrint();
-		}
-		loadPrinterQueueItem.Enabled = !successPrint;
 	}
 
 	private void OnErrorDetectedOnPukaClient(string message)
@@ -67,23 +71,59 @@ public class TrayIconPrinter
 		trayIcon.ShowBalloonTip(2000, "Conexión exitosa al servidor", "Se logro establecer una conexión exitosa al servidor", ToolTipIcon.Info);
 	}
 
-	private void NotifyUserOnFailedToPrint()
+	private void OnChangeNumberItemsQueue(int numberItemsQueue)
 	{
-		string message = "Revise conexión con la impresora, posiblemente este desconectada";
-		trayIcon.ShowBalloonTip(2000, "Algunos tickets no se imprimieron", message, ToolTipIcon.Warning);
+		actionsPrintQueue.Text = "Cola de impresión: " + numberItemsQueue;
+		actionsPrintQueue.Enabled = numberItemsQueue != 0;
+		numberItemsQueueSnapshot = numberItemsQueue;
+	}
+
+	private void OnFailedToPrint(string details)
+	{
+		trayIcon.ShowBalloonTip(2000, "Hubo un fallo al imprimir un ticket", $"No se logro imprimir un ticket error: {details}", ToolTipIcon.Error);
+	}
+
+	private void OnChangePrintTicketsEnabled(bool enabled)
+	{
+		actionsPrintQueue.Enabled = enabled && numberItemsQueueSnapshot != 0;
 	}
 
 	private async void LoadPrinterQueue(object? sender, EventArgs e)
 	{
 		try
 		{
-			loadPrinterQueueItem.Enabled = false;
-			await pukaClient.RequestToLoadPrintQueue();
+			DialogResult result = MessageBox.Show("¿Quieres volver a imprimir los tickets en cola de impresión?", "VENTANA DE CONFIRMACIÓN", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+			if (result == DialogResult.OK)
+			{
+				await pukaClient.RequestToLoadPrintQueue();
+			}
 		}
 		catch (System.Exception ex)
 		{
 			Program.Logger.Error(ex, "TrayIcon error: LoadPrinterQueue: ", ex.Message);
 		}
+	}
+
+	private async void ReleasePrinterQueue(object? sender, EventArgs e)
+	{
+		try
+		{
+			DialogResult result = MessageBox.Show("¿Seguro que quieres eliminar los tickets en cola de impresión?", "VENTANA DE CONFIRMACIÓN", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+			if (result == DialogResult.OK)
+			{
+				await pukaClient.RequestToReleaseQueue();
+			}
+		}
+		catch (System.Exception ex)
+		{
+			Program.Logger.Error(ex, $"TrayIcon error: LoadPrinterQueue: {ex.Message}");
+		}
+	}
+
+
+	private void ActionsPrintQueue(object? sender, EventArgs e)
+	{
+		//TODO: Abrir dialogo de cola de impresión
 	}
 
 	private void ChangeCompanyLogo(object? sender, EventArgs e)
