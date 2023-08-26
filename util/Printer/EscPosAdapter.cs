@@ -39,8 +39,11 @@ namespace puka.util.printer
 					printer = new FilePrinter(hostname.ToString(), true);
 					break;
 				case TypeConnectionPrinter.Samba:
-					printer = new SambaPrinter(hostname.ToString(), port.ToString());
-					break;
+					{
+						string filePath = hostname.ToString() ?? "";
+						printer = new PuyuSambaPrinter(@"C:\Temp", filePath);
+						break;
+					}
 				case TypeConnectionPrinter.WindowsUsb:
 					{
 						List<DeviceDetails> usbDevices = DeviceFinder.GetDevices();//gets the usb devices connected to the pc
