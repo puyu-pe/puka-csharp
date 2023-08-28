@@ -271,8 +271,11 @@ namespace puka.util.printer
 				case "precount":
 					result = connectorPrinter.CombinePrinterParameter(
 							result,
-							connectorPrinter.LeftTextPosition(),
-							connectorPrinter.PrintDataLine(data.document.description.ToString()));
+							connectorPrinter.DoubleHeightWeightText(),
+							connectorPrinter.CenterTextPosition(),
+							connectorPrinter.PrintDataLine(data.document.description.ToString()),
+							connectorPrinter.NoneTextFont()
+							);
 					break;
 			}
 
