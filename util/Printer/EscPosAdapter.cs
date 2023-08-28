@@ -48,7 +48,7 @@ namespace puka.util.printer
 						DeviceDetails? targetDevice = usbDevices.Find((item) =>
 						{
 							string? displayName = item.DisplayName?.Replace(" ", "");
-							return displayName == name_system;
+							return displayName == name_system;	
 						});
 						if (targetDevice == null)
 							throw new Exception($"Impresora USB {name_system}, no encontrada");
@@ -231,18 +231,19 @@ namespace puka.util.printer
 			return paddedBoth;
 		}
 
-		public string PadRightText(string text, int width, char characterPad)
-		{
-			int totalPadding = width - text.Length;
-
-			string paddedLeft = text + new string(characterPad, totalPadding);
-
-			return paddedLeft;
-		}
 
 		public byte[] EncodingLatin2()
 		{
 			return epsonPrinter.CodePage(CodePage.WPC1250_LATIN2);
+		}
+
+		public List<string> WrapText(string text, int charactersPerLine)
+		{
+			List<string> paragraph = new List<string>();
+			MatchCollection matches = Regex.Matches(text, "." + "{1," + $"{charactersPerLine}" + "}");
+			foreach (Match match in matches)
+				paragraph.Add(match.Value);
+			return paragraph;
 		}
 	}
 }

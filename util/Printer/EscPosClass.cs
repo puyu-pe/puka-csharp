@@ -398,13 +398,52 @@ namespace puka.util.printer
 								totalPrice = item.totalPrice.ToString("F2");
 							}
 
-							string element = "  " + quantity.PadRight(3) + description;
-
-							result = connectorPrinter.CombinePrinterParameter(
+							int charactersPerLine = this.width - (7 + totalPrice.Length);
+							List<string> spliceDescription = connectorPrinter.WrapText(description, charactersPerLine);
+							if (spliceDescription.Count > 1)
+							{
+								for (int i = 0; i < spliceDescription.Count; ++i)
+								{
+									string element = "";
+									if (i == spliceDescription.Count - 1)
+									{
+										element += "".PadRight(5) + spliceDescription[i];
+										result = connectorPrinter.CombinePrinterParameter(
+											result,
+											connectorPrinter.NoneTextFont(),
+											connectorPrinter.LeftTextPosition(),
+											connectorPrinter.PrintDataLine(element.PadRight(charactersPerLine + totalPrice.Length + 2, ' ') + totalPrice));
+									}
+									else if (i == 0)
+									{
+										element += "".PadRight(2) + quantity.PadRight(3) + spliceDescription[i];
+										result = connectorPrinter.CombinePrinterParameter(
+												result,
+												connectorPrinter.NoneTextFont(),
+												connectorPrinter.LeftTextPosition(),
+												connectorPrinter.PrintDataLine(element.PadRight(charactersPerLine + totalPrice.Length + 2, ' ')));
+									}
+									else
+									{
+										element += "".PadRight(5) + spliceDescription[i];
+										result = connectorPrinter.CombinePrinterParameter(
+												result,
+												connectorPrinter.NoneTextFont(),
+												connectorPrinter.LeftTextPosition(),
+												connectorPrinter.PrintDataLine(element.PadRight(charactersPerLine + totalPrice.Length + 2, ' ')));
+									}
+								}
+							}
+							else
+							{
+								string element = "".PadRight(2) + quantity.PadRight(3) + description;
+								
+								result = connectorPrinter.CombinePrinterParameter(
 									result,
 									connectorPrinter.NoneTextFont(),
 									connectorPrinter.LeftTextPosition(),
-									connectorPrinter.PrintDataLine(connectorPrinter.PadRightText(element, (width - totalPrice.Length), ' ') + totalPrice));
+									connectorPrinter.PrintDataLine(element.PadRight(charactersPerLine + totalPrice.Length + 2, ' ') + totalPrice));
+							}
 						}
 
 						if (item.commentary != null)
