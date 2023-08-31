@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
-using puka;
 
 
 namespace puka.util.printer
@@ -31,7 +30,8 @@ namespace puka.util.printer
 					throw new Exception("connectorPrinter = null en PrinterDocument");
 				if (!await connectorPrinter.IsPrinterOnline())
 				{
-					throw new Exception("La impresora no esta conectada");
+					Program.Logger.Error($"No se encontro la impresora, names_system: {printer.name_system}, port: {printer.port}");
+					throw new Exception($"Error de conexión con la impresora");
 				}
 				for (int i = 0; i < times; i++)
 				{

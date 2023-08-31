@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using System.Timers;
 using puka;
 
@@ -24,6 +22,37 @@ namespace ESCPOS_NET
 			_filePath = filePath;
 		}
 
+		public bool GetOnlineStatus()
+		{
+			try
+			{
+				_tempFilePath = Path.Combine(_tempFileBasePath, $"{Guid.NewGuid()}.bin");
+				File.WriteAllText(_tempFilePath, "");
+				var task = new Task<bool>(() =>
+				{
+					try
+					{
+						File.Copy(_tempFilePath, _filePath);
+						return true;
+					}
+					catch (System.Exception)
+					{
+						return false;
+					}
+					finally
+					{
+						File.Delete(_tempFilePath);
+					}
+				});
+				task.Start();
+				return task.Wait(500) && task.Result;
+			}
+			catch (System.Exception)
+			{
+				return false;
+			}
+		}
+
 		public override void Flush(object sender, ElapsedEventArgs e)
 		{
 			try
@@ -44,7 +73,7 @@ namespace ESCPOS_NET
 			}
 			catch (System.Exception ex)
 			{
-				Program.Logger.Error("Error al limpiar SambaPrinter",ex.Message);
+				Program.Logger.Error("Error al limpiar SambaPrinter", ex.Message);
 			}
 		}
 	}

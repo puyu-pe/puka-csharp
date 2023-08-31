@@ -2,8 +2,6 @@
 using ESCPOS_NET.Emitters;
 using ESCPOS_NET.Printers;
 using ESCPOS_NET.Utilities;
-using System.Globalization;
-using System.Text;
 using System.Text.RegularExpressions;
 
 
@@ -51,7 +49,7 @@ namespace puka.util.printer
 						DeviceDetails? targetDevice = usbDevices.Find((item) =>
 						{
 							string? displayName = item.DisplayName?.Replace(" ", "");
-							return displayName == name_system;	
+							return displayName == name_system;
 						});
 						if (targetDevice == null)
 							throw new Exception($"Impresora USB {name_system}, no encontrada");
@@ -73,6 +71,10 @@ namespace puka.util.printer
 				if (printer is ImmediateNetworkPrinter printerNetwork)
 				{
 					return await printerNetwork.GetOnlineStatus(epsonPrinter);
+				}
+				if (printer is PuyuSambaPrinter puyuSambaPrinter)
+				{
+					return puyuSambaPrinter.GetOnlineStatus();
 				}
 				if (printer is BasePrinter basePrinter)
 				{
