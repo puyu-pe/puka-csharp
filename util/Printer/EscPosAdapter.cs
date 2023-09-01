@@ -214,7 +214,7 @@ namespace puka.util.printer
 
 		public byte[] PrinterCutWidth(int quantity)
 		{
-			byte[] cutPrinter = CombinePrinterParameter(epsonPrinter.FullCutAfterFeed(quantity));
+			byte[] cutPrinter = CombinePrinterParameter(epsonPrinter.PartialCutAfterFeed(quantity));
 
 			return cutPrinter;
 		}
