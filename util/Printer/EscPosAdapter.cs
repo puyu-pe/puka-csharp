@@ -250,5 +250,11 @@ namespace puka.util.printer
 				paragraph.Add(match.Value);
 			return paragraph;
 		}
+
+		public byte[] PulsePin2()
+		{
+			return epsonPrinter.CashDrawerOpenPin2();
+		}
+
 	}
 }

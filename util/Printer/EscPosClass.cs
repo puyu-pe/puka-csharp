@@ -99,7 +99,9 @@ namespace puka.util.printer
 								AdditionalFooter(),
 								FinalMessage(),
 								StringQR(),
-								connectorPrinter.PrinterCutWidth(2));
+								connectorPrinter.PrinterCutWidth(2),
+								connectorPrinter.PulsePin2()
+								);
 						break;
 
 					case "note":

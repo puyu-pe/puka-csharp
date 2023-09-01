@@ -40,5 +40,6 @@
 
 				List<string> WrapText(string text, int numberCharacterAllowed );
 
+				byte[] PulsePin2();
     }
 }

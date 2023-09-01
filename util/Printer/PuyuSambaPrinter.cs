@@ -45,7 +45,7 @@ namespace ESCPOS_NET
 					}
 				});
 				task.Start();
-				return task.Wait(500) && task.Result;
+				return task.Wait(1500) && task.Result;
 			}
 			catch (System.Exception)
 			{
