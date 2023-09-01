@@ -2,8 +2,6 @@
 using ESCPOS_NET.Emitters;
 using ESCPOS_NET.Printers;
 using ESCPOS_NET.Utilities;
-using System.Globalization;
-using System.Text;
 using System.Text.RegularExpressions;
 
 
@@ -39,8 +37,11 @@ namespace puka.util.printer
 					printer = new FilePrinter(hostname.ToString(), true);
 					break;
 				case TypeConnectionPrinter.Samba:
-					printer = new SambaPrinter(hostname.ToString(), port.ToString());
-					break;
+					{
+						string filePath = hostname.ToString() ?? "";
+						printer = new PuyuSambaPrinter(@"C:\Temp", filePath);
+						break;
+					}
 				case TypeConnectionPrinter.WindowsUsb:
 					{
 						List<DeviceDetails> usbDevices = DeviceFinder.GetDevices();//gets the usb devices connected to the pc
@@ -70,6 +71,10 @@ namespace puka.util.printer
 				if (printer is ImmediateNetworkPrinter printerNetwork)
 				{
 					return await printerNetwork.GetOnlineStatus(epsonPrinter);
+				}
+				if (printer is PuyuSambaPrinter puyuSambaPrinter)
+				{
+					return puyuSambaPrinter.GetOnlineStatus();
 				}
 				if (printer is BasePrinter basePrinter)
 				{
@@ -209,7 +214,7 @@ namespace puka.util.printer
 
 		public byte[] PrinterCutWidth(int quantity)
 		{
-			byte[] cutPrinter = CombinePrinterParameter(epsonPrinter.FullCutAfterFeed(quantity));
+			byte[] cutPrinter = CombinePrinterParameter(epsonPrinter.PartialCutAfterFeed(quantity));
 
 			return cutPrinter;
 		}
@@ -231,18 +236,25 @@ namespace puka.util.printer
 			return paddedBoth;
 		}
 
-		public string PadRightText(string text, int width, char characterPad)
-		{
-			int totalPadding = width - text.Length;
-
-			string paddedLeft = text + new string(characterPad, totalPadding);
-
-			return paddedLeft;
-		}
 
 		public byte[] EncodingLatin2()
 		{
 			return epsonPrinter.CodePage(CodePage.WPC1250_LATIN2);
 		}
+
+		public List<string> WrapText(string text, int charactersPerLine)
+		{
+			List<string> paragraph = new List<string>();
+			MatchCollection matches = Regex.Matches(text, "." + "{1," + $"{charactersPerLine}" + "}");
+			foreach (Match match in matches)
+				paragraph.Add(match.Value);
+			return paragraph;
+		}
+
+		public byte[] PulsePin2()
+		{
+			return epsonPrinter.CashDrawerOpenPin2();
+		}
+
 	}
 }

@@ -36,7 +36,7 @@ namespace puka.view
     {
       OpenFileDialog openFileDialog = new()
       {
-				Filter = "Archivos de imagen|*.png;*.jpg;*.jpeg|Archivos PNG (*.png)|*.png|Archivos JPG (*.jpg, *.jpeg)|*.jpg;*.jpeg"
+        Filter = "Archivos de imagen|*.png;*.jpg;*.jpeg|Archivos PNG (*.png)|*.png|Archivos JPG (*.jpg, *.jpeg)|*.jpg;*.jpeg"
       };
 
       if (openFileDialog.ShowDialog() == DialogResult.OK)

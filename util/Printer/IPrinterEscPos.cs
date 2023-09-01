@@ -36,9 +36,10 @@
 
         string PadBoth(string text, int width, char PaddingChar);
 
-        string PadRightText(string text, int width, char characterPad);
-
         byte[] EncodingLatin2();
 
+				List<string> WrapText(string text, int numberCharacterAllowed );
+
+				byte[] PulsePin2();
     }
 }
