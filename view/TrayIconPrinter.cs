@@ -22,7 +22,7 @@ public class TrayIconPrinter
 		trayIcon = new NotifyIcon()
 		{
 			Text = "PUKA - YURES",
-			Icon = new Icon("icono.ico"),
+			Icon = new Icon("puka.ico"),
 			ContextMenuStrip = new ContextMenuStrip(),
 			Visible = true,
 		};
