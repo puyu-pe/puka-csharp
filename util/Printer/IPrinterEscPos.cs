@@ -32,7 +32,7 @@
 
         byte[] PrintQRCode(string dataQR);
 
-        byte[] PrinterCutWidth(int quantity);
+        byte[] PrinterCutWidth();
 
         string PadBoth(string text, int width, char PaddingChar);
 

@@ -99,7 +99,7 @@ namespace puka.util.printer
 								AdditionalFooter(),
 								FinalMessage(),
 								StringQR(),
-								connectorPrinter.PrinterCutWidth(2),
+								connectorPrinter.PrinterCutWidth(),
 								connectorPrinter.PulsePin2()
 								);
 						break;
@@ -111,7 +111,7 @@ namespace puka.util.printer
 								DocumentLegal(),
 								Customer(),
 								Additional(),
-								connectorPrinter.PrinterCutWidth(2));
+								connectorPrinter.PrinterCutWidth());
 						break;
 
 					case "command":
@@ -123,7 +123,7 @@ namespace puka.util.printer
 								DocumentLegal(),
 								Additional(),
 								Items(),
-								connectorPrinter.PrinterCutWidth(2));
+								connectorPrinter.PrinterCutWidth());
 						break;
 
 					case "precount":
@@ -134,7 +134,7 @@ namespace puka.util.printer
 								Additional(),
 								Items(),
 								Amounts(),
-								connectorPrinter.PrinterCutWidth(2));
+								connectorPrinter.PrinterCutWidth());
 						break;
 
 					case "extra":
@@ -145,7 +145,7 @@ namespace puka.util.printer
 								Additional(),
 								Items(),
 								Amounts(),
-								connectorPrinter.PrinterCutWidth(2));
+								connectorPrinter.PrinterCutWidth());
 						break;
 
 					default:

@@ -52,7 +52,7 @@ namespace puka.util.printer
 							return displayName == name_system;
 						});
 						if (targetDevice == null)
-							throw new Exception($"Impresora USB {name_system}, no encontrada");
+							throw new Exception($"Impresora USB {hostname.ToString()}, no encontrada");
 						string? usbPort = targetDevice.DevicePath;
 						if (usbPort == null)
 							throw new Exception($"No se encontro un DevicePath: {targetDevice.DisplayName}");
@@ -212,9 +212,9 @@ namespace puka.util.printer
 			return dataQRPrinter;
 		}
 
-		public byte[] PrinterCutWidth(int quantity)
+		public byte[] PrinterCutWidth()
 		{
-			byte[] cutPrinter = CombinePrinterParameter(epsonPrinter.PartialCutAfterFeed(quantity));
+			byte[] cutPrinter = CombinePrinterParameter(epsonPrinter.PartialCutAfterFeed(0));
 
 			return cutPrinter;
 		}
