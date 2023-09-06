@@ -73,7 +73,7 @@ namespace ESCPOS_NET
 			}
 			catch (System.Exception ex)
 			{
-				Program.Logger.Error("Error al limpiar SambaPrinter", ex.Message);
+				Program.Logger.Error(ex ,"Error al limpiar SambaPrinter {0}", ex.Message);
 			}
 		}
 	}

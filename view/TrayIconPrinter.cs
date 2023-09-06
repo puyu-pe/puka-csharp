@@ -100,7 +100,7 @@ public class TrayIconPrinter
 		}
 		catch (System.Exception ex)
 		{
-			Program.Logger.Error(ex, "TrayIcon error: LoadPrinterQueue: ", ex.Message);
+			Program.Logger.Error(ex, "TrayIcon error: LoadPrinterQueue: {0}", ex.Message);
 		}
 	}
 
@@ -116,7 +116,7 @@ public class TrayIconPrinter
 		}
 		catch (System.Exception ex)
 		{
-			Program.Logger.Error(ex, $"TrayIcon error: LoadPrinterQueue: {ex.Message}");
+			Program.Logger.Error(ex, "TrayIcon Exception ReleasePrinterQueue: {0}", ex.Message);
 		}
 	}
 

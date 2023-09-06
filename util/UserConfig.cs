@@ -30,7 +30,7 @@ public class UserConfig
 		catch (System.Exception ex)
 		{
 			File.WriteAllText(configFilePath, "<configuration></configuration>");
-			Program.Logger.Error(ex,"Error al cargar la configuración de  usuario");
+			Program.Logger.Error(ex, "Error al cargar la configuración de  usuario: {0}", ex.Message);
 		}
 	}
 
