@@ -30,8 +30,8 @@ namespace puka.util.printer
 					throw new Exception("connectorPrinter = null en PrinterDocument");
 				if (!await connectorPrinter.IsPrinterOnline())
 				{
-					Program.Logger.Error($"No se encontro la impresora, names_system: {printer.name_system}, port: {printer.port}");
-					throw new Exception($"Error de conexión con la impresora");
+					Program.Logger.Warn($"No se encontro la impresora, names_system: {printer.name_system}, port: {printer.port}");
+					throw new Exception("Error de conexión con la impresora");
 				}
 				for (int i = 0; i < times; i++)
 				{
@@ -71,7 +71,7 @@ namespace puka.util.printer
 			}
 			catch (Exception ex)
 			{
-				Program.Logger.Warn(ex, "Error en ConnectTypePrinter", ex.Message);
+				Program.Logger.Error(ex, "Error en ConnectTypePrinter en EscPosClass: {0}", ex.Message);
 				throw;
 			}
 		}
@@ -99,7 +99,7 @@ namespace puka.util.printer
 								AdditionalFooter(),
 								FinalMessage(),
 								StringQR(),
-								connectorPrinter.PrinterCutWidth(2),
+								connectorPrinter.PrinterCutWidth(),
 								connectorPrinter.PulsePin2()
 								);
 						break;
@@ -111,7 +111,7 @@ namespace puka.util.printer
 								DocumentLegal(),
 								Customer(),
 								Additional(),
-								connectorPrinter.PrinterCutWidth(2));
+								connectorPrinter.PrinterCutWidth());
 						break;
 
 					case "command":
@@ -123,7 +123,7 @@ namespace puka.util.printer
 								DocumentLegal(),
 								Additional(),
 								Items(),
-								connectorPrinter.PrinterCutWidth(2));
+								connectorPrinter.PrinterCutWidth());
 						break;
 
 					case "precount":
@@ -134,7 +134,7 @@ namespace puka.util.printer
 								Additional(),
 								Items(),
 								Amounts(),
-								connectorPrinter.PrinterCutWidth(2));
+								connectorPrinter.PrinterCutWidth());
 						break;
 
 					case "extra":
@@ -145,7 +145,7 @@ namespace puka.util.printer
 								Additional(),
 								Items(),
 								Amounts(),
-								connectorPrinter.PrinterCutWidth(2));
+								connectorPrinter.PrinterCutWidth());
 						break;
 
 					default:
@@ -154,7 +154,7 @@ namespace puka.util.printer
 			}
 			catch (Exception ex)
 			{
-				Program.Logger.Warn(ex, "Ocurrio una excepcion en PrintLayout ", ex.Message);
+				Program.Logger.Error(ex, "Ocurrio un error en PrintLayout: {0}", ex.Message);
 				throw;
 			}
 			return result;

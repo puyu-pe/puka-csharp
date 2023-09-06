@@ -15,14 +15,14 @@ public class PukaClient
 	public delegate void OnErrorDetected(string error);
 	OnErrorDetected onErrorDetected = (string message) =>
 	{
-		Program.Logger.Error("Ocurrio un error: ", message);
+		Program.Logger.Error("Se detecto un error en pukaclient {0}", message);
 	};
 
 	public delegate void OnFailedToPrint(string details);
 
 	OnFailedToPrint onFailedToPrint = (string details) =>
 	{
-		Program.Logger.Warn("Error al imprimir un ticket: " + details);
+		Program.Logger.Warn("No se imprimio un ticket: {0}", details);
 	};
 
 
@@ -42,14 +42,14 @@ public class PukaClient
 
 	OnChangeNumberItemsQueue onChangeNumberItemsQueue = (int numberItemsQueue) =>
 	{
-		Program.Logger.Info("Elementos en cola: " + numberItemsQueue);
+		Program.Logger.Debug("Se cambio numero de elementos en cola: {}", numberItemsQueue);
 	};
 
 	public delegate void OnChangePrintTicketsEnabled(bool enabled);
 
 	OnChangePrintTicketsEnabled onChangePrintTicketsEnabled = (bool enabled) =>
 	{
-		Program.Logger.Info("falta implementar evento onChangePrintTicketsEnabled");
+		Program.Logger.Debug("falta implementar evento onChangePrintTicketsEnabled");
 	};
 
 
@@ -74,8 +74,11 @@ public class PukaClient
 	private async Task PrintTickets(Dictionary<string, JsonElement>? queue)
 	{
 		if (queue == null)
+		{
+			Program.Logger.Warn("La cola es null, no se envio tickets para imprimir");
 			return;
-		Program.Logger.Info($"Se recibe {queue.Count} elementos a imprimir");
+		}
+		Program.Logger.Debug("Se recibe {0} elementos a imprimir", queue.Count);
 		onChangePrintTicketsEnabled(false);
 		foreach (KeyValuePair<string, JsonElement> kvp in queue)
 		{
@@ -102,14 +105,23 @@ public class PukaClient
 
 				foreach (var ticket in dataToPrintObject)
 				{
-					await new EscPosClass(ticket).PrinterDocument();
+					try
+					{
+						await new EscPosClass(ticket).PrinterDocument();
+						Program.Logger.Trace("Se imprimio el siguiente ticket con key -> {0}: {1}", kvp.Key, ticket);
+					}
+					catch (System.Exception)
+					{
+						Program.Logger.Trace("No se imprimio el siguiente ticket con key -> {0}: {1}", kvp.Key, ticket);
+						throw;
+					}
 				}
 
 				await client.EmitAsync("printer:printed", new BifrostDeleteRequest { Key = kvp.Key });
 			}
 			catch (Exception e)
 			{
-				Program.Logger.Warn(e, e.Message);
+				Program.Logger.Warn(e, "No se imprimio un ticket: {0}", e.Message);
 				onFailedToPrint(e.Message);
 			}
 		}
@@ -151,7 +163,8 @@ public class PukaClient
 		await client.EmitAsync("printer:start");
 	}
 
-	public async Task RequestToReleaseQueue(){
+	public async Task RequestToReleaseQueue()
+	{
 		await client.EmitAsync("printer:release-queue");
 	}
 
@@ -166,19 +179,19 @@ public class PukaClient
 		var bifrostResponse = response.GetValue<BifrostResponse>();
 		if (bifrostResponse.Status == "success")
 		{
-			Program.Logger.Info("Servidor: " + bifrostResponse.Message);
+			Program.Logger.Debug("Se carga cola de impresión,respuesta bifrost: {0}", bifrostResponse.Message);
 			await PrintTickets(bifrostResponse.Data);
 		}
 		else
 		{
-			Program.Logger.Warn("PukaClient: no se pudo recuperar la cola de impresión");
+			Program.Logger.Warn("No se pudo cargar la cola de impresión, respuesta bifrost: {0}", bifrostResponse.Message);
 		}
 	}
 
 	private async void OnToPrint(SocketIOResponse response)
 	{
 		var bifrostResponse = response.GetValue<BifrostResponse>();
-		Program.Logger.Info("Servidor: " + bifrostResponse.Message);
+		Program.Logger.Debug("Llega un ticket para imprimir, respuesta bifrost: {0}", bifrostResponse.Message);
 		await PrintTickets(bifrostResponse.Data);
 	}
 
@@ -190,7 +203,7 @@ public class PukaClient
 	private async void OnConnected(object? sender, EventArgs e)
 	{
 		onConnectedSuccess();
-		Program.Logger.Info("Conexión a {0}", client.ServerUri.AbsoluteUri);
+		Program.Logger.Info("Puka se conecta a {0}", client.ServerUri.AbsoluteUri);
 		await client.EmitAsync("printer:start");
 	}
 
