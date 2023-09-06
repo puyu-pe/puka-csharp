@@ -30,8 +30,7 @@ namespace puka.util.printer
 					});
 					break;
 				case TypeConnectionPrinter.Serial:
-					int Bound = Convert.ToInt32(port.ToString());
-					printer = new SerialPrinter(hostname.ToString(), Bound);
+					printer = new SerialPrinter(hostname.ToString(), 115200);
 					break;
 				case TypeConnectionPrinter.File:
 					printer = new FilePrinter(hostname.ToString(), true);
