@@ -61,9 +61,9 @@ public class PukaClient
 			ReconnectionDelay = 2000,
 		});
 
-		client.On("printer:load-queue", OnLoadQueue);
-		client.On("printer:to-print", OnToPrint);
-		client.On("printer:number-items-queue", OnNumberItemsQueue);
+		client.On("printer:send-printing-queue", OnLoadQueue);
+		client.On("printer:emit-item", OnToPrint);
+		client.On("printer:send-number-items-queue", OnNumberItemsQueue);
 		client.OnConnected += OnConnected;
 		client.OnError += OnError;
 		client.OnReconnectAttempt += OnReconnectAttempt;
@@ -117,7 +117,7 @@ public class PukaClient
 					}
 				}
 
-				await client.EmitAsync("printer:printed", new BifrostDeleteRequest { Key = kvp.Key });
+				await client.EmitAsync("printer:print-item", new BifrostDeleteRequest { Key = kvp.Key });
 			}
 			catch (Exception e)
 			{
@@ -160,7 +160,7 @@ public class PukaClient
 
 	public async Task RequestToLoadPrintQueue()
 	{
-		await client.EmitAsync("printer:start");
+		await client.EmitAsync("printer:get-printing-queue");
 	}
 
 	public async Task RequestToReleaseQueue()
@@ -204,7 +204,7 @@ public class PukaClient
 	{
 		onConnectedSuccess();
 		Program.Logger.Info("Puka se conecta a {0}", client.ServerUri.AbsoluteUri);
-		await client.EmitAsync("printer:start");
+		await RequestToLoadPrintQueue();
 	}
 
 	private async void OnError(object? sender, string e)
