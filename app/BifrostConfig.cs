@@ -65,7 +65,7 @@ public static class BifrostConfig
 		{
 			errors.Add("El namespace no debe ser un campo vacio");
 		}
-		bool isValidNamespace = Regex.IsMatch(namespaceBifrost, @"^[a-zA-Z]+:[a-zA-Z]+$", RegexOptions.Multiline);
+		bool isValidNamespace = Regex.IsMatch(namespaceBifrost, @"^[a-zA-Z]+:?[a-zA-Z]+$", RegexOptions.Multiline);
 		if (!isValidNamespace)
 		{
 			errors.Add("El namespace no tiene un formato correcto");

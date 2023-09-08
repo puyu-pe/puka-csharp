@@ -258,7 +258,7 @@
       textNamespace.ReadOnly = true;
       textNamespace.Size = new Size(473, 31);
       textNamespace.TabIndex = 4;
-      textNamespace.Text = "yures:printer";
+      textNamespace.Text = "printing";
       textNamespace.TextAlign = HorizontalAlignment.Center;
       // 
       // endLayout
