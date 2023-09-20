@@ -69,7 +69,7 @@ namespace puka.util.printer
 			{
 				if (printer is ImmediateNetworkPrinter printerNetwork)
 				{
-					return await printerNetwork.GetOnlineStatus(epsonPrinter);
+					return true;
 				}
 				if (printer is PuyuSambaPrinter puyuSambaPrinter)
 				{
